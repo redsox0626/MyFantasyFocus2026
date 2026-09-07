@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "MyFantasyFocus",
+      "hasCanvas": false,
+      "bodyTextLen": 716,
+      "bodyTextHash": "0c807a8c10a14f0acb2bf5b107273814171628e56deb7898ad3b5a8292b5b52a",
+      "bodyTextPrefix": "NFL 2026 My Fantasy Focus WK 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "MyFantasyFocus",
+      "hasCanvas": false,
+      "bodyTextLen": 345,
+      "bodyTextHash": "64445546ee864321335d2633a8b2770d771c112a4e93af1336119aed2b508e7d",
+      "bodyTextPrefix": "NFL 2026 My Fantasy Focus WK 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}

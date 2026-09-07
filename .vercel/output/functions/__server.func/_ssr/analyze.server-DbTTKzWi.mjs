@@ -1,0 +1,608 @@
+import { f as normalizeNflTeam, i as ESPN_SLOT_POSITION, n as ESPN_DEFAULT_POSITION, r as ESPN_PRO_TEAM, t as ESPN_BENCH_SLOTS, u as formatPlayerName } from "./constants-B6K5XiYV.mjs";
+import { a as sleeperPlayerInfo, c as identityKey, i as getSleeperPlayers, n as findSleeperIdByName, r as getNflState, s as abbreviateTeamName, t as collectSleeperStarts } from "./sleeper.server-k0GjoDuD.mjs";
+import { n as findGameForTeam, r as kickoffLabel, t as classifySlot } from "./schedule-B0w6Xspk.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/analyze.server-DbTTKzWi.js
+var nfl_2026_schedule_default = /*#__PURE__*/ JSON.parse("[{\"week\":1,\"id\":\"401872656\",\"start_time\":\"2026-09-10T00:20Z\",\"home_team\":\"SEA\",\"away_team\":\"NE\",\"name\":\"NE @ SEA\",\"venue\":\"Lumen Field\",\"city\":\"Seattle\",\"country\":\"USA\",\"detail\":\"Wed, September 9th at 8:20 PM EDT\"},{\"week\":1,\"id\":\"401872657\",\"start_time\":\"2026-09-11T00:35Z\",\"home_team\":\"LAR\",\"away_team\":\"SF\",\"name\":\"SF VS LAR\",\"venue\":\"Melbourne Cricket Ground\",\"city\":\"Melbourne\",\"country\":\"Australia\",\"detail\":\"Thu, September 10th at 8:35 PM EDT\"},{\"week\":1,\"id\":\"401872925\",\"start_time\":\"2026-09-13T17:00Z\",\"home_team\":\"CIN\",\"away_team\":\"TB\",\"name\":\"TB @ CIN\",\"venue\":\"Paycor Stadium\",\"city\":\"Cincinnati\",\"country\":\"USA\",\"detail\":\"Sun, September 13th at 1:00 PM EDT\"},{\"week\":1,\"id\":\"401872923\",\"start_time\":\"2026-09-13T17:00Z\",\"home_team\":\"DET\",\"away_team\":\"NO\",\"name\":\"NO @ DET\",\"venue\":\"Ford Field\",\"city\":\"Detroit\",\"country\":\"USA\",\"detail\":\"Sun, September 13th at 1:00 PM EDT\"},{\"week\":1,\"id\":\"401872924\",\"start_time\":\"2026-09-13T17:00Z\",\"home_team\":\"TEN\",\"away_team\":\"NYJ\",\"name\":\"NYJ @ TEN\",\"venue\":\"Nissan Stadium\",\"city\":\"Nashville\",\"country\":\"USA\",\"detail\":\"Sun, September 13th at 1:00 PM EDT\"},{\"week\":1,\"id\":\"401872659\",\"start_time\":\"2026-09-13T17:00Z\",\"home_team\":\"IND\",\"away_team\":\"BAL\",\"name\":\"BAL @ IND\",\"venue\":\"Lucas Oil Stadium\",\"city\":\"Indianapolis\",\"country\":\"USA\",\"detail\":\"Sun, September 13th at 1:00 PM EDT\"},{\"week\":1,\"id\":\"401872658\",\"start_time\":\"2026-09-13T17:00Z\",\"home_team\":\"PIT\",\"away_team\":\"ATL\",\"name\":\"ATL @ PIT\",\"venue\":\"Acrisure Stadium\",\"city\":\"Pittsburgh\",\"country\":\"USA\",\"detail\":\"Sun, September 13th at 1:00 PM EDT\"},{\"week\":1,\"id\":\"401872661\",\"start_time\":\"2026-09-13T17:00Z\",\"home_team\":\"CAR\",\"away_team\":\"CHI\",\"name\":\"CHI @ CAR\",\"venue\":\"Bank of America Stadium\",\"city\":\"Charlotte\",\"country\":\"USA\",\"detail\":\"Sun, September 13th at 1:00 PM EDT\"},{\"week\":1,\"id\":\"401872922\",\"start_time\":\"2026-09-13T17:00Z\",\"home_team\":\"JAX\",\"away_team\":\"CLE\",\"name\":\"CLE @ JAX\",\"venue\":\"EverBank Stadium\",\"city\":\"Jacksonville\",\"country\":\"USA\",\"detail\":\"Sun, September 13th at 1:00 PM EDT\"},{\"week\":1,\"id\":\"401872660\",\"start_time\":\"2026-09-13T17:00Z\",\"home_team\":\"HOU\",\"away_team\":\"BUF\",\"name\":\"BUF @ HOU\",\"venue\":\"Reliant Stadium\",\"city\":\"Houston\",\"country\":\"USA\",\"detail\":\"Sun, September 13th at 1:00 PM EDT\"},{\"week\":1,\"id\":\"401872928\",\"start_time\":\"2026-09-13T20:25Z\",\"home_team\":\"LV\",\"away_team\":\"MIA\",\"name\":\"MIA @ LV\",\"venue\":\"Allegiant Stadium\",\"city\":\"Las Vegas\",\"country\":\"USA\",\"detail\":\"Sun, September 13th at 4:25 PM EDT\"},{\"week\":1,\"id\":\"401872927\",\"start_time\":\"2026-09-13T20:25Z\",\"home_team\":\"MIN\",\"away_team\":\"GB\",\"name\":\"GB @ MIN\",\"venue\":\"U.S. Bank Stadium\",\"city\":\"Minneapolis\",\"country\":\"USA\",\"detail\":\"Sun, September 13th at 4:25 PM EDT\"},{\"week\":1,\"id\":\"401872929\",\"start_time\":\"2026-09-13T20:25Z\",\"home_team\":\"PHI\",\"away_team\":\"WSH\",\"name\":\"WSH @ PHI\",\"venue\":\"Lincoln Financial Field\",\"city\":\"Philadelphia\",\"country\":\"USA\",\"detail\":\"Sun, September 13th at 4:25 PM EDT\"},{\"week\":1,\"id\":\"401872926\",\"start_time\":\"2026-09-13T20:25Z\",\"home_team\":\"LAC\",\"away_team\":\"ARI\",\"name\":\"ARI @ LAC\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Sun, September 13th at 4:25 PM EDT\"},{\"week\":1,\"id\":\"401872930\",\"start_time\":\"2026-09-14T00:20Z\",\"home_team\":\"NYG\",\"away_team\":\"DAL\",\"name\":\"DAL @ NYG\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, September 13th at 8:20 PM EDT\"},{\"week\":1,\"id\":\"401872931\",\"start_time\":\"2026-09-15T00:15Z\",\"home_team\":\"KC\",\"away_team\":\"DEN\",\"name\":\"DEN @ KC\",\"venue\":\"Arrowhead Stadium\",\"city\":\"Kansas City\",\"country\":\"USA\",\"detail\":\"Mon, September 14th at 8:15 PM EDT\"},{\"week\":2,\"id\":\"401872932\",\"start_time\":\"2026-09-18T00:15Z\",\"home_team\":\"BUF\",\"away_team\":\"DET\",\"name\":\"DET @ BUF\",\"venue\":\"Highmark Stadium\",\"city\":\"Orchard Park\",\"country\":\"USA\",\"detail\":\"Thu, September 17th at 8:15 PM EDT\"},{\"week\":2,\"id\":\"401872933\",\"start_time\":\"2026-09-20T17:00Z\",\"home_team\":\"ATL\",\"away_team\":\"CAR\",\"name\":\"CAR @ ATL\",\"venue\":\"Mercedes-Benz Stadium\",\"city\":\"Atlanta\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 1:00 PM EDT\"},{\"week\":2,\"id\":\"401872937\",\"start_time\":\"2026-09-20T17:00Z\",\"home_team\":\"CHI\",\"away_team\":\"MIN\",\"name\":\"MIN @ CHI\",\"venue\":\"Soldier Field\",\"city\":\"Chicago\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 1:00 PM EDT\"},{\"week\":2,\"id\":\"401872939\",\"start_time\":\"2026-09-20T17:00Z\",\"home_team\":\"TEN\",\"away_team\":\"PHI\",\"name\":\"PHI @ TEN\",\"venue\":\"Nissan Stadium\",\"city\":\"Nashville\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 1:00 PM EDT\"},{\"week\":2,\"id\":\"401872946\",\"start_time\":\"2026-09-20T17:00Z\",\"home_team\":\"NE\",\"away_team\":\"PIT\",\"name\":\"PIT @ NE\",\"venue\":\"Gillette Stadium\",\"city\":\"Foxborough\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 1:00 PM EDT\"},{\"week\":2,\"id\":\"401872936\",\"start_time\":\"2026-09-20T17:00Z\",\"home_team\":\"NYJ\",\"away_team\":\"GB\",\"name\":\"GB @ NYJ\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 1:00 PM EDT\"},{\"week\":2,\"id\":\"401872935\",\"start_time\":\"2026-09-20T17:00Z\",\"home_team\":\"TB\",\"away_team\":\"CLE\",\"name\":\"CLE @ TB\",\"venue\":\"Raymond James Stadium\",\"city\":\"Tampa\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 1:00 PM EDT\"},{\"week\":2,\"id\":\"401872938\",\"start_time\":\"2026-09-20T17:00Z\",\"home_team\":\"BAL\",\"away_team\":\"NO\",\"name\":\"NO @ BAL\",\"venue\":\"M&T Bank Stadium\",\"city\":\"Baltimore\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 1:00 PM EDT\"},{\"week\":2,\"id\":\"401872934\",\"start_time\":\"2026-09-20T17:00Z\",\"home_team\":\"HOU\",\"away_team\":\"CIN\",\"name\":\"CIN @ HOU\",\"venue\":\"Reliant Stadium\",\"city\":\"Houston\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 1:00 PM EDT\"},{\"week\":2,\"id\":\"401872940\",\"start_time\":\"2026-09-20T20:05Z\",\"home_team\":\"DEN\",\"away_team\":\"JAX\",\"name\":\"JAX @ DEN\",\"venue\":\"Empower Field at Mile High\",\"city\":\"Denver\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 4:05 PM EDT\"},{\"week\":2,\"id\":\"401872941\",\"start_time\":\"2026-09-20T20:05Z\",\"home_team\":\"LAC\",\"away_team\":\"LV\",\"name\":\"LV @ LAC\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 4:05 PM EDT\"},{\"week\":2,\"id\":\"401872944\",\"start_time\":\"2026-09-20T20:25Z\",\"home_team\":\"DAL\",\"away_team\":\"WSH\",\"name\":\"WSH @ DAL\",\"venue\":\"AT&T Stadium\",\"city\":\"Arlington\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 4:25 PM EDT\"},{\"week\":2,\"id\":\"401872943\",\"start_time\":\"2026-09-20T20:25Z\",\"home_team\":\"ARI\",\"away_team\":\"SEA\",\"name\":\"SEA @ ARI\",\"venue\":\"State Farm Stadium\",\"city\":\"Glendale\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 4:25 PM EDT\"},{\"week\":2,\"id\":\"401872942\",\"start_time\":\"2026-09-20T20:25Z\",\"home_team\":\"SF\",\"away_team\":\"MIA\",\"name\":\"MIA @ SF\",\"venue\":\"Levi's Stadium\",\"city\":\"Santa Clara\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 4:25 PM EDT\"},{\"week\":2,\"id\":\"401872945\",\"start_time\":\"2026-09-21T00:20Z\",\"home_team\":\"KC\",\"away_team\":\"IND\",\"name\":\"IND @ KC\",\"venue\":\"Arrowhead Stadium\",\"city\":\"Kansas City\",\"country\":\"USA\",\"detail\":\"Sun, September 20th at 8:20 PM EDT\"},{\"week\":2,\"id\":\"401872947\",\"start_time\":\"2026-09-22T00:15Z\",\"home_team\":\"LAR\",\"away_team\":\"NYG\",\"name\":\"NYG @ LAR\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Mon, September 21st at 8:15 PM EDT\"},{\"week\":3,\"id\":\"401872948\",\"start_time\":\"2026-09-25T00:15Z\",\"home_team\":\"GB\",\"away_team\":\"ATL\",\"name\":\"ATL @ GB\",\"venue\":\"Lambeau Field\",\"city\":\"Green Bay\",\"country\":\"USA\",\"detail\":\"Thu, September 24th at 8:15 PM EDT\"},{\"week\":3,\"id\":\"401872953\",\"start_time\":\"2026-09-27T17:00Z\",\"home_team\":\"BUF\",\"away_team\":\"LAC\",\"name\":\"LAC @ BUF\",\"venue\":\"Highmark Stadium\",\"city\":\"Orchard Park\",\"country\":\"USA\",\"detail\":\"Sun, September 27th at 1:00 PM EDT\"},{\"week\":3,\"id\":\"401872949\",\"start_time\":\"2026-09-27T17:00Z\",\"home_team\":\"CLE\",\"away_team\":\"CAR\",\"name\":\"CAR @ CLE\",\"venue\":\"Huntington Bank Field\",\"city\":\"Cleveland\",\"country\":\"USA\",\"detail\":\"Sun, September 27th at 1:00 PM EDT\"},{\"week\":3,\"id\":\"401872954\",\"start_time\":\"2026-09-27T17:00Z\",\"home_team\":\"DET\",\"away_team\":\"NYJ\",\"name\":\"NYJ @ DET\",\"venue\":\"Ford Field\",\"city\":\"Detroit\",\"country\":\"USA\",\"detail\":\"Sun, September 27th at 1:00 PM EDT\"},{\"week\":3,\"id\":\"401872951\",\"start_time\":\"2026-09-27T17:00Z\",\"home_team\":\"IND\",\"away_team\":\"HOU\",\"name\":\"HOU @ IND\",\"venue\":\"Lucas Oil Stadium\",\"city\":\"Indianapolis\",\"country\":\"USA\",\"detail\":\"Sun, September 27th at 1:00 PM EDT\"},{\"week\":3,\"id\":\"401872952\",\"start_time\":\"2026-09-27T17:00Z\",\"home_team\":\"MIA\",\"away_team\":\"KC\",\"name\":\"KC @ MIA\",\"venue\":\"Hard Rock Stadium\",\"city\":\"Miami Gardens\",\"country\":\"USA\",\"detail\":\"Sun, September 27th at 1:00 PM EDT\"},{\"week\":3,\"id\":\"401872956\",\"start_time\":\"2026-09-27T17:00Z\",\"home_team\":\"NYG\",\"away_team\":\"TEN\",\"name\":\"TEN @ NYG\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, September 27th at 1:00 PM EDT\"},{\"week\":3,\"id\":\"401872950\",\"start_time\":\"2026-09-27T17:00Z\",\"home_team\":\"PIT\",\"away_team\":\"CIN\",\"name\":\"CIN @ PIT\",\"venue\":\"Acrisure Stadium\",\"city\":\"Pittsburgh\",\"country\":\"USA\",\"detail\":\"Sun, September 27th at 1:00 PM EDT\"},{\"week\":3,\"id\":\"401872955\",\"start_time\":\"2026-09-27T17:00Z\",\"home_team\":\"WSH\",\"away_team\":\"SEA\",\"name\":\"SEA @ WSH\",\"venue\":\"Northwest Stadium\",\"city\":\"Landover\",\"country\":\"USA\",\"detail\":\"Sun, September 27th at 1:00 PM EDT\"},{\"week\":3,\"id\":\"401872957\",\"start_time\":\"2026-09-27T17:00Z\",\"home_team\":\"JAX\",\"away_team\":\"NE\",\"name\":\"NE @ JAX\",\"venue\":\"EverBank Stadium\",\"city\":\"Jacksonville\",\"country\":\"USA\",\"detail\":\"Sun, September 27th at 1:00 PM EDT\"},{\"week\":3,\"id\":\"401872958\",\"start_time\":\"2026-09-27T20:05Z\",\"home_team\":\"SF\",\"away_team\":\"ARI\",\"name\":\"ARI @ SF\",\"venue\":\"Levi's Stadium\",\"city\":\"Santa Clara\",\"country\":\"USA\",\"detail\":\"Sun, September 27th at 4:05 PM EDT\"},{\"week\":3,\"id\":\"401872959\",\"start_time\":\"2026-09-27T20:05Z\",\"home_team\":\"TB\",\"away_team\":\"MIN\",\"name\":\"MIN @ TB\",\"venue\":\"Raymond James Stadium\",\"city\":\"Tampa\",\"country\":\"USA\",\"detail\":\"Sun, September 27th at 4:05 PM EDT\"},{\"week\":3,\"id\":\"401872960\",\"start_time\":\"2026-09-27T20:25Z\",\"home_team\":\"DAL\",\"away_team\":\"BAL\",\"name\":\"BAL VS DAL\",\"venue\":\"Maracanã Stadium\",\"city\":\"Rio De Janeiro\",\"country\":\"Brazil\",\"detail\":\"Sun, September 27th at 4:25 PM EDT\"},{\"week\":3,\"id\":\"401872961\",\"start_time\":\"2026-09-27T20:25Z\",\"home_team\":\"NO\",\"away_team\":\"LV\",\"name\":\"LV @ NO\",\"venue\":\"Caesars Superdome\",\"city\":\"New Orleans\",\"country\":\"USA\",\"detail\":\"Sun, September 27th at 4:25 PM EDT\"},{\"week\":3,\"id\":\"401872962\",\"start_time\":\"2026-09-28T00:20Z\",\"home_team\":\"DEN\",\"away_team\":\"LAR\",\"name\":\"LAR @ DEN\",\"venue\":\"Empower Field at Mile High\",\"city\":\"Denver\",\"country\":\"USA\",\"detail\":\"Sun, September 27th at 8:20 PM EDT\"},{\"week\":3,\"id\":\"401872963\",\"start_time\":\"2026-09-29T00:15Z\",\"home_team\":\"CHI\",\"away_team\":\"PHI\",\"name\":\"PHI @ CHI\",\"venue\":\"Soldier Field\",\"city\":\"Chicago\",\"country\":\"USA\",\"detail\":\"Mon, September 28th at 8:15 PM EDT\"},{\"week\":4,\"id\":\"401872964\",\"start_time\":\"2026-10-02T00:15Z\",\"home_team\":\"CLE\",\"away_team\":\"PIT\",\"name\":\"PIT @ CLE\",\"venue\":\"Huntington Bank Field\",\"city\":\"Cleveland\",\"country\":\"USA\",\"detail\":\"Thu, October 1st at 8:15 PM EDT\"},{\"week\":4,\"id\":\"401872965\",\"start_time\":\"2026-10-04T13:30Z\",\"home_team\":\"WSH\",\"away_team\":\"IND\",\"name\":\"IND VS WSH\",\"venue\":\"Tottenham Hotspur Stadium\",\"city\":\"London\",\"country\":\"England\",\"detail\":\"Sun, October 4th at 9:30 AM EDT\"},{\"week\":4,\"id\":\"401872971\",\"start_time\":\"2026-10-04T17:00Z\",\"home_team\":\"BUF\",\"away_team\":\"NE\",\"name\":\"NE @ BUF\",\"venue\":\"Highmark Stadium\",\"city\":\"Orchard Park\",\"country\":\"USA\",\"detail\":\"Sun, October 4th at 1:00 PM EDT\"},{\"week\":4,\"id\":\"401872972\",\"start_time\":\"2026-10-04T17:00Z\",\"home_team\":\"CHI\",\"away_team\":\"NYJ\",\"name\":\"NYJ @ CHI\",\"venue\":\"Soldier Field\",\"city\":\"Chicago\",\"country\":\"USA\",\"detail\":\"Sun, October 4th at 1:00 PM EDT\"},{\"week\":4,\"id\":\"401872969\",\"start_time\":\"2026-10-04T17:00Z\",\"home_team\":\"CIN\",\"away_team\":\"JAX\",\"name\":\"JAX @ CIN\",\"venue\":\"Paycor Stadium\",\"city\":\"Cincinnati\",\"country\":\"USA\",\"detail\":\"Sun, October 4th at 1:00 PM EDT\"},{\"week\":4,\"id\":\"401872966\",\"start_time\":\"2026-10-04T17:00Z\",\"home_team\":\"NYG\",\"away_team\":\"ARI\",\"name\":\"ARI @ NYG\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, October 4th at 1:00 PM EDT\"},{\"week\":4,\"id\":\"401872970\",\"start_time\":\"2026-10-04T17:00Z\",\"home_team\":\"PHI\",\"away_team\":\"LAR\",\"name\":\"LAR @ PHI\",\"venue\":\"Lincoln Financial Field\",\"city\":\"Philadelphia\",\"country\":\"USA\",\"detail\":\"Sun, October 4th at 1:00 PM EDT\"},{\"week\":4,\"id\":\"401872968\",\"start_time\":\"2026-10-04T17:00Z\",\"home_team\":\"TB\",\"away_team\":\"GB\",\"name\":\"GB @ TB\",\"venue\":\"Raymond James Stadium\",\"city\":\"Tampa\",\"country\":\"USA\",\"detail\":\"Sun, October 4th at 1:00 PM EDT\"},{\"week\":4,\"id\":\"401872973\",\"start_time\":\"2026-10-04T17:00Z\",\"home_team\":\"BAL\",\"away_team\":\"TEN\",\"name\":\"TEN @ BAL\",\"venue\":\"M&T Bank Stadium\",\"city\":\"Baltimore\",\"country\":\"USA\",\"detail\":\"Sun, October 4th at 1:00 PM EDT\"},{\"week\":4,\"id\":\"401872967\",\"start_time\":\"2026-10-04T17:00Z\",\"home_team\":\"HOU\",\"away_team\":\"DAL\",\"name\":\"DAL @ HOU\",\"venue\":\"Reliant Stadium\",\"city\":\"Houston\",\"country\":\"USA\",\"detail\":\"Sun, October 4th at 1:00 PM EDT\"},{\"week\":4,\"id\":\"401872974\",\"start_time\":\"2026-10-04T20:05Z\",\"home_team\":\"MIN\",\"away_team\":\"MIA\",\"name\":\"MIA @ MIN\",\"venue\":\"U.S. Bank Stadium\",\"city\":\"Minneapolis\",\"country\":\"USA\",\"detail\":\"Sun, October 4th at 4:05 PM EDT\"},{\"week\":4,\"id\":\"401872976\",\"start_time\":\"2026-10-04T20:25Z\",\"home_team\":\"LV\",\"away_team\":\"KC\",\"name\":\"KC @ LV\",\"venue\":\"Allegiant Stadium\",\"city\":\"Las Vegas\",\"country\":\"USA\",\"detail\":\"Sun, October 4th at 4:25 PM EDT\"},{\"week\":4,\"id\":\"401872975\",\"start_time\":\"2026-10-04T20:25Z\",\"home_team\":\"SF\",\"away_team\":\"DEN\",\"name\":\"DEN @ SF\",\"venue\":\"Levi's Stadium\",\"city\":\"Santa Clara\",\"country\":\"USA\",\"detail\":\"Sun, October 4th at 4:25 PM EDT\"},{\"week\":4,\"id\":\"401872977\",\"start_time\":\"2026-10-04T20:25Z\",\"home_team\":\"SEA\",\"away_team\":\"LAC\",\"name\":\"LAC @ SEA\",\"venue\":\"Lumen Field\",\"city\":\"Seattle\",\"country\":\"USA\",\"detail\":\"Sun, October 4th at 4:25 PM EDT\"},{\"week\":4,\"id\":\"401872978\",\"start_time\":\"2026-10-05T00:20Z\",\"home_team\":\"CAR\",\"away_team\":\"DET\",\"name\":\"DET @ CAR\",\"venue\":\"Bank of America Stadium\",\"city\":\"Charlotte\",\"country\":\"USA\",\"detail\":\"Sun, October 4th at 8:20 PM EDT\"},{\"week\":4,\"id\":\"401872979\",\"start_time\":\"2026-10-06T00:15Z\",\"home_team\":\"NO\",\"away_team\":\"ATL\",\"name\":\"ATL @ NO\",\"venue\":\"Caesars Superdome\",\"city\":\"New Orleans\",\"country\":\"USA\",\"detail\":\"Mon, October 5th at 8:15 PM EDT\"},{\"week\":5,\"id\":\"401872980\",\"start_time\":\"2026-10-09T00:15Z\",\"home_team\":\"DAL\",\"away_team\":\"TB\",\"name\":\"TB @ DAL\",\"venue\":\"AT&T Stadium\",\"city\":\"Arlington\",\"country\":\"USA\",\"detail\":\"Thu, October 8th at 8:15 PM EDT\"},{\"week\":5,\"id\":\"401872981\",\"start_time\":\"2026-10-11T13:30Z\",\"home_team\":\"JAX\",\"away_team\":\"PHI\",\"name\":\"PHI VS JAX\",\"venue\":\"Tottenham Hotspur Stadium\",\"city\":\"London\",\"country\":\"England\",\"detail\":\"Sun, October 11th at 9:30 AM EDT\"},{\"week\":5,\"id\":\"401872984\",\"start_time\":\"2026-10-11T17:00Z\",\"home_team\":\"TEN\",\"away_team\":\"HOU\",\"name\":\"HOU @ TEN\",\"venue\":\"Nissan Stadium\",\"city\":\"Nashville\",\"country\":\"USA\",\"detail\":\"Sun, October 11th at 1:00 PM EDT\"},{\"week\":5,\"id\":\"401872982\",\"start_time\":\"2026-10-11T17:00Z\",\"home_team\":\"MIA\",\"away_team\":\"CIN\",\"name\":\"CIN @ MIA\",\"venue\":\"Hard Rock Stadium\",\"city\":\"Miami Gardens\",\"country\":\"USA\",\"detail\":\"Sun, October 11th at 1:00 PM EDT\"},{\"week\":5,\"id\":\"401872986\",\"start_time\":\"2026-10-11T17:00Z\",\"home_team\":\"NE\",\"away_team\":\"LV\",\"name\":\"LV @ NE\",\"venue\":\"Gillette Stadium\",\"city\":\"Foxborough\",\"country\":\"USA\",\"detail\":\"Sun, October 11th at 1:00 PM EDT\"},{\"week\":5,\"id\":\"401872987\",\"start_time\":\"2026-10-11T17:00Z\",\"home_team\":\"NO\",\"away_team\":\"MIN\",\"name\":\"MIN @ NO\",\"venue\":\"Caesars Superdome\",\"city\":\"New Orleans\",\"country\":\"USA\",\"detail\":\"Sun, October 11th at 1:00 PM EDT\"},{\"week\":5,\"id\":\"401872983\",\"start_time\":\"2026-10-11T17:00Z\",\"home_team\":\"NYJ\",\"away_team\":\"CLE\",\"name\":\"CLE @ NYJ\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, October 11th at 1:00 PM EDT\"},{\"week\":5,\"id\":\"401872985\",\"start_time\":\"2026-10-11T17:00Z\",\"home_team\":\"PIT\",\"away_team\":\"IND\",\"name\":\"IND @ PIT\",\"venue\":\"Acrisure Stadium\",\"city\":\"Pittsburgh\",\"country\":\"USA\",\"detail\":\"Sun, October 11th at 1:00 PM EDT\"},{\"week\":5,\"id\":\"401872988\",\"start_time\":\"2026-10-11T17:00Z\",\"home_team\":\"WSH\",\"away_team\":\"NYG\",\"name\":\"NYG @ WSH\",\"venue\":\"Northwest Stadium\",\"city\":\"Landover\",\"country\":\"USA\",\"detail\":\"Sun, October 11th at 1:00 PM EDT\"},{\"week\":5,\"id\":\"401872989\",\"start_time\":\"2026-10-11T20:05Z\",\"home_team\":\"LAC\",\"away_team\":\"DEN\",\"name\":\"DEN @ LAC\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Sun, October 11th at 4:05 PM EDT\"},{\"week\":5,\"id\":\"401872990\",\"start_time\":\"2026-10-11T20:25Z\",\"home_team\":\"GB\",\"away_team\":\"CHI\",\"name\":\"CHI @ GB\",\"venue\":\"Lambeau Field\",\"city\":\"Green Bay\",\"country\":\"USA\",\"detail\":\"Sun, October 11th at 4:25 PM EDT\"},{\"week\":5,\"id\":\"401872991\",\"start_time\":\"2026-10-11T20:25Z\",\"home_team\":\"ARI\",\"away_team\":\"DET\",\"name\":\"DET @ ARI\",\"venue\":\"State Farm Stadium\",\"city\":\"Glendale\",\"country\":\"USA\",\"detail\":\"Sun, October 11th at 4:25 PM EDT\"},{\"week\":5,\"id\":\"401872992\",\"start_time\":\"2026-10-11T20:25Z\",\"home_team\":\"SEA\",\"away_team\":\"SF\",\"name\":\"SF @ SEA\",\"venue\":\"Lumen Field\",\"city\":\"Seattle\",\"country\":\"USA\",\"detail\":\"Sun, October 11th at 4:25 PM EDT\"},{\"week\":5,\"id\":\"401872993\",\"start_time\":\"2026-10-12T00:20Z\",\"home_team\":\"ATL\",\"away_team\":\"BAL\",\"name\":\"BAL @ ATL\",\"venue\":\"Mercedes-Benz Stadium\",\"city\":\"Atlanta\",\"country\":\"USA\",\"detail\":\"Sun, October 11th at 8:20 PM EDT\"},{\"week\":5,\"id\":\"401872994\",\"start_time\":\"2026-10-13T00:15Z\",\"home_team\":\"LAR\",\"away_team\":\"BUF\",\"name\":\"BUF @ LAR\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Mon, October 12th at 8:15 PM EDT\"},{\"week\":6,\"id\":\"401872995\",\"start_time\":\"2026-10-16T00:15Z\",\"home_team\":\"DEN\",\"away_team\":\"SEA\",\"name\":\"SEA @ DEN\",\"venue\":\"Empower Field at Mile High\",\"city\":\"Denver\",\"country\":\"USA\",\"detail\":\"Thu, October 15th at 8:15 PM EDT\"},{\"week\":6,\"id\":\"401872996\",\"start_time\":\"2026-10-18T13:30Z\",\"home_team\":\"JAX\",\"away_team\":\"HOU\",\"name\":\"HOU VS JAX\",\"venue\":\"Wembley Stadium\",\"city\":\"London\",\"country\":\"England\",\"detail\":\"Sun, October 18th at 9:30 AM EDT\"},{\"week\":6,\"id\":\"401872999\",\"start_time\":\"2026-10-18T17:00Z\",\"home_team\":\"ATL\",\"away_team\":\"CHI\",\"name\":\"CHI @ ATL\",\"venue\":\"Mercedes-Benz Stadium\",\"city\":\"Atlanta\",\"country\":\"USA\",\"detail\":\"Sun, October 18th at 1:00 PM EDT\"},{\"week\":6,\"id\":\"401872997\",\"start_time\":\"2026-10-18T17:00Z\",\"home_team\":\"CLE\",\"away_team\":\"BAL\",\"name\":\"BAL @ CLE\",\"venue\":\"Huntington Bank Field\",\"city\":\"Cleveland\",\"country\":\"USA\",\"detail\":\"Sun, October 18th at 1:00 PM EDT\"},{\"week\":6,\"id\":\"401873003\",\"start_time\":\"2026-10-18T17:00Z\",\"home_team\":\"IND\",\"away_team\":\"TEN\",\"name\":\"TEN @ IND\",\"venue\":\"Lucas Oil Stadium\",\"city\":\"Indianapolis\",\"country\":\"USA\",\"detail\":\"Sun, October 18th at 1:00 PM EDT\"},{\"week\":6,\"id\":\"401873001\",\"start_time\":\"2026-10-18T17:00Z\",\"home_team\":\"NE\",\"away_team\":\"NYJ\",\"name\":\"NYJ @ NE\",\"venue\":\"Gillette Stadium\",\"city\":\"Foxborough\",\"country\":\"USA\",\"detail\":\"Sun, October 18th at 1:00 PM EDT\"},{\"week\":6,\"id\":\"401873000\",\"start_time\":\"2026-10-18T17:00Z\",\"home_team\":\"NYG\",\"away_team\":\"NO\",\"name\":\"NO @ NYG\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, October 18th at 1:00 PM EDT\"},{\"week\":6,\"id\":\"401872998\",\"start_time\":\"2026-10-18T17:00Z\",\"home_team\":\"PHI\",\"away_team\":\"CAR\",\"name\":\"CAR @ PHI\",\"venue\":\"Lincoln Financial Field\",\"city\":\"Philadelphia\",\"country\":\"USA\",\"detail\":\"Sun, October 18th at 1:00 PM EDT\"},{\"week\":6,\"id\":\"401873002\",\"start_time\":\"2026-10-18T17:00Z\",\"home_team\":\"TB\",\"away_team\":\"PIT\",\"name\":\"PIT @ TB\",\"venue\":\"Raymond James Stadium\",\"city\":\"Tampa\",\"country\":\"USA\",\"detail\":\"Sun, October 18th at 1:00 PM EDT\"},{\"week\":6,\"id\":\"401873004\",\"start_time\":\"2026-10-18T20:05Z\",\"home_team\":\"LAR\",\"away_team\":\"ARI\",\"name\":\"ARI @ LAR\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Sun, October 18th at 4:05 PM EDT\"},{\"week\":6,\"id\":\"401873006\",\"start_time\":\"2026-10-18T20:25Z\",\"home_team\":\"KC\",\"away_team\":\"LAC\",\"name\":\"LAC @ KC\",\"venue\":\"Arrowhead Stadium\",\"city\":\"Kansas City\",\"country\":\"USA\",\"detail\":\"Sun, October 18th at 4:25 PM EDT\"},{\"week\":6,\"id\":\"401873005\",\"start_time\":\"2026-10-18T20:25Z\",\"home_team\":\"LV\",\"away_team\":\"BUF\",\"name\":\"BUF @ LV\",\"venue\":\"Allegiant Stadium\",\"city\":\"Las Vegas\",\"country\":\"USA\",\"detail\":\"Sun, October 18th at 4:25 PM EDT\"},{\"week\":6,\"id\":\"401873007\",\"start_time\":\"2026-10-19T00:20Z\",\"home_team\":\"GB\",\"away_team\":\"DAL\",\"name\":\"DAL @ GB\",\"venue\":\"Lambeau Field\",\"city\":\"Green Bay\",\"country\":\"USA\",\"detail\":\"Sun, October 18th at 8:20 PM EDT\"},{\"week\":6,\"id\":\"401873008\",\"start_time\":\"2026-10-20T00:15Z\",\"home_team\":\"SF\",\"away_team\":\"WSH\",\"name\":\"WSH @ SF\",\"venue\":\"Levi's Stadium\",\"city\":\"Santa Clara\",\"country\":\"USA\",\"detail\":\"Mon, October 19th at 8:15 PM EDT\"},{\"week\":7,\"id\":\"401873010\",\"start_time\":\"2026-10-23T00:15Z\",\"home_team\":\"CHI\",\"away_team\":\"NE\",\"name\":\"NE @ CHI\",\"venue\":\"Soldier Field\",\"city\":\"Chicago\",\"country\":\"USA\",\"detail\":\"Thu, October 22nd at 8:15 PM EDT\"},{\"week\":7,\"id\":\"401873011\",\"start_time\":\"2026-10-25T13:30Z\",\"home_team\":\"NO\",\"away_team\":\"PIT\",\"name\":\"PIT VS NO\",\"venue\":\"Stade de France\",\"city\":\"Saint-Denis\",\"country\":\"France\",\"detail\":\"Sun, October 25th at 9:30 AM EDT\"},{\"week\":7,\"id\":\"401873017\",\"start_time\":\"2026-10-25T17:00Z\",\"home_team\":\"ATL\",\"away_team\":\"SF\",\"name\":\"SF @ ATL\",\"venue\":\"Mercedes-Benz Stadium\",\"city\":\"Atlanta\",\"country\":\"USA\",\"detail\":\"Sun, October 25th at 1:00 PM EDT\"},{\"week\":7,\"id\":\"401873013\",\"start_time\":\"2026-10-25T17:00Z\",\"home_team\":\"TEN\",\"away_team\":\"CLE\",\"name\":\"CLE @ TEN\",\"venue\":\"Nissan Stadium\",\"city\":\"Nashville\",\"country\":\"USA\",\"detail\":\"Sun, October 25th at 1:00 PM EDT\"},{\"week\":7,\"id\":\"401873014\",\"start_time\":\"2026-10-25T17:00Z\",\"home_team\":\"MIN\",\"away_team\":\"IND\",\"name\":\"IND @ MIN\",\"venue\":\"U.S. Bank Stadium\",\"city\":\"Minneapolis\",\"country\":\"USA\",\"detail\":\"Sun, October 25th at 1:00 PM EDT\"},{\"week\":7,\"id\":\"401873015\",\"start_time\":\"2026-10-25T17:00Z\",\"home_team\":\"NYJ\",\"away_team\":\"MIA\",\"name\":\"MIA @ NYJ\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, October 25th at 1:00 PM EDT\"},{\"week\":7,\"id\":\"401873018\",\"start_time\":\"2026-10-25T17:00Z\",\"home_team\":\"CAR\",\"away_team\":\"TB\",\"name\":\"TB @ CAR\",\"venue\":\"Bank of America Stadium\",\"city\":\"Charlotte\",\"country\":\"USA\",\"detail\":\"Sun, October 25th at 1:00 PM EDT\"},{\"week\":7,\"id\":\"401873012\",\"start_time\":\"2026-10-25T17:00Z\",\"home_team\":\"BAL\",\"away_team\":\"CIN\",\"name\":\"CIN @ BAL\",\"venue\":\"M&T Bank Stadium\",\"city\":\"Baltimore\",\"country\":\"USA\",\"detail\":\"Sun, October 25th at 1:00 PM EDT\"},{\"week\":7,\"id\":\"401873016\",\"start_time\":\"2026-10-25T17:00Z\",\"home_team\":\"HOU\",\"away_team\":\"NYG\",\"name\":\"NYG @ HOU\",\"venue\":\"Reliant Stadium\",\"city\":\"Houston\",\"country\":\"USA\",\"detail\":\"Sun, October 25th at 1:00 PM EDT\"},{\"week\":7,\"id\":\"401873019\",\"start_time\":\"2026-10-25T20:05Z\",\"home_team\":\"ARI\",\"away_team\":\"DEN\",\"name\":\"DEN @ ARI\",\"venue\":\"State Farm Stadium\",\"city\":\"Glendale\",\"country\":\"USA\",\"detail\":\"Sun, October 25th at 4:05 PM EDT\"},{\"week\":7,\"id\":\"401873020\",\"start_time\":\"2026-10-25T20:25Z\",\"home_team\":\"DET\",\"away_team\":\"GB\",\"name\":\"GB @ DET\",\"venue\":\"Ford Field\",\"city\":\"Detroit\",\"country\":\"USA\",\"detail\":\"Sun, October 25th at 4:25 PM EDT\"},{\"week\":7,\"id\":\"401873021\",\"start_time\":\"2026-10-25T20:25Z\",\"home_team\":\"LV\",\"away_team\":\"LAR\",\"name\":\"LAR @ LV\",\"venue\":\"Allegiant Stadium\",\"city\":\"Las Vegas\",\"country\":\"USA\",\"detail\":\"Sun, October 25th at 4:25 PM EDT\"},{\"week\":7,\"id\":\"401873022\",\"start_time\":\"2026-10-26T00:20Z\",\"home_team\":\"SEA\",\"away_team\":\"KC\",\"name\":\"KC @ SEA\",\"venue\":\"Lumen Field\",\"city\":\"Seattle\",\"country\":\"USA\",\"detail\":\"Sun, October 25th at 8:20 PM EDT\"},{\"week\":7,\"id\":\"401873009\",\"start_time\":\"2026-10-27T00:15Z\",\"home_team\":\"PHI\",\"away_team\":\"DAL\",\"name\":\"DAL @ PHI\",\"venue\":\"Lincoln Financial Field\",\"city\":\"Philadelphia\",\"country\":\"USA\",\"detail\":\"Mon, October 26th at 8:15 PM EDT\"},{\"week\":8,\"id\":\"401873023\",\"start_time\":\"2026-10-30T00:15Z\",\"home_team\":\"GB\",\"away_team\":\"CAR\",\"name\":\"CAR @ GB\",\"venue\":\"Lambeau Field\",\"city\":\"Green Bay\",\"country\":\"USA\",\"detail\":\"Thu, October 29th at 8:15 PM EDT\"},{\"week\":8,\"id\":\"401873026\",\"start_time\":\"2026-11-01T18:00Z\",\"home_team\":\"BUF\",\"away_team\":\"BAL\",\"name\":\"BAL @ BUF\",\"venue\":\"Highmark Stadium\",\"city\":\"Orchard Park\",\"country\":\"USA\",\"detail\":\"Sun, November 1st at 1:00 PM EST\"},{\"week\":8,\"id\":\"401873031\",\"start_time\":\"2026-11-01T18:00Z\",\"home_team\":\"CIN\",\"away_team\":\"TEN\",\"name\":\"TEN @ CIN\",\"venue\":\"Paycor Stadium\",\"city\":\"Cincinnati\",\"country\":\"USA\",\"detail\":\"Sun, November 1st at 1:00 PM EST\"},{\"week\":8,\"id\":\"401873024\",\"start_time\":\"2026-11-01T18:00Z\",\"home_team\":\"DAL\",\"away_team\":\"ARI\",\"name\":\"ARI @ DAL\",\"venue\":\"AT&T Stadium\",\"city\":\"Arlington\",\"country\":\"USA\",\"detail\":\"Sun, November 1st at 1:00 PM EST\"},{\"week\":8,\"id\":\"401873030\",\"start_time\":\"2026-11-01T18:00Z\",\"home_team\":\"DET\",\"away_team\":\"MIN\",\"name\":\"MIN @ DET\",\"venue\":\"Ford Field\",\"city\":\"Detroit\",\"country\":\"USA\",\"detail\":\"Sun, November 1st at 1:00 PM EST\"},{\"week\":8,\"id\":\"401873029\",\"start_time\":\"2026-11-01T18:00Z\",\"home_team\":\"NYJ\",\"away_team\":\"LV\",\"name\":\"LV @ NYJ\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, November 1st at 1:00 PM EST\"},{\"week\":8,\"id\":\"401873027\",\"start_time\":\"2026-11-01T18:00Z\",\"home_team\":\"PIT\",\"away_team\":\"CLE\",\"name\":\"CLE @ PIT\",\"venue\":\"Acrisure Stadium\",\"city\":\"Pittsburgh\",\"country\":\"USA\",\"detail\":\"Sun, November 1st at 1:00 PM EST\"},{\"week\":8,\"id\":\"401873025\",\"start_time\":\"2026-11-01T18:00Z\",\"home_team\":\"TB\",\"away_team\":\"ATL\",\"name\":\"ATL @ TB\",\"venue\":\"Raymond James Stadium\",\"city\":\"Tampa\",\"country\":\"USA\",\"detail\":\"Sun, November 1st at 1:00 PM EST\"},{\"week\":8,\"id\":\"401873028\",\"start_time\":\"2026-11-01T18:00Z\",\"home_team\":\"JAX\",\"away_team\":\"IND\",\"name\":\"IND @ JAX\",\"venue\":\"EverBank Stadium\",\"city\":\"Jacksonville\",\"country\":\"USA\",\"detail\":\"Sun, November 1st at 1:00 PM EST\"},{\"week\":8,\"id\":\"401873032\",\"start_time\":\"2026-11-01T21:05Z\",\"home_team\":\"LAR\",\"away_team\":\"LAC\",\"name\":\"LAC @ LAR\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Sun, November 1st at 4:05 PM EST\"},{\"week\":8,\"id\":\"401873033\",\"start_time\":\"2026-11-01T21:25Z\",\"home_team\":\"DEN\",\"away_team\":\"KC\",\"name\":\"KC @ DEN\",\"venue\":\"Empower Field at Mile High\",\"city\":\"Denver\",\"country\":\"USA\",\"detail\":\"Sun, November 1st at 4:25 PM EST\"},{\"week\":8,\"id\":\"401873034\",\"start_time\":\"2026-11-01T21:25Z\",\"home_team\":\"MIA\",\"away_team\":\"NE\",\"name\":\"NE @ MIA\",\"venue\":\"Hard Rock Stadium\",\"city\":\"Miami Gardens\",\"country\":\"USA\",\"detail\":\"Sun, November 1st at 4:25 PM EST\"},{\"week\":8,\"id\":\"401873035\",\"start_time\":\"2026-11-02T01:20Z\",\"home_team\":\"WSH\",\"away_team\":\"PHI\",\"name\":\"PHI @ WSH\",\"venue\":\"Northwest Stadium\",\"city\":\"Landover\",\"country\":\"USA\",\"detail\":\"Sun, November 1st at 8:20 PM EST\"},{\"week\":8,\"id\":\"401873036\",\"start_time\":\"2026-11-03T01:15Z\",\"home_team\":\"SEA\",\"away_team\":\"CHI\",\"name\":\"CHI @ SEA\",\"venue\":\"Lumen Field\",\"city\":\"Seattle\",\"country\":\"USA\",\"detail\":\"Mon, November 2nd at 8:15 PM EST\"},{\"week\":9,\"id\":\"401873037\",\"start_time\":\"2026-11-06T01:15Z\",\"home_team\":\"BAL\",\"away_team\":\"JAX\",\"name\":\"JAX @ BAL\",\"venue\":\"M&T Bank Stadium\",\"city\":\"Baltimore\",\"country\":\"USA\",\"detail\":\"Thu, November 5th at 8:15 PM EST\"},{\"week\":9,\"id\":\"401873038\",\"start_time\":\"2026-11-08T14:30Z\",\"home_team\":\"ATL\",\"away_team\":\"CIN\",\"name\":\"CIN VS ATL\",\"venue\":\"Santiago Bernabéu\",\"city\":\"Madrid\",\"country\":\"Spain\",\"detail\":\"Sun, November 8th at 9:30 AM EST\"},{\"week\":9,\"id\":\"401873040\",\"start_time\":\"2026-11-08T18:00Z\",\"home_team\":\"IND\",\"away_team\":\"DAL\",\"name\":\"DAL @ IND\",\"venue\":\"Lucas Oil Stadium\",\"city\":\"Indianapolis\",\"country\":\"USA\",\"detail\":\"Sun, November 8th at 1:00 PM EST\"},{\"week\":9,\"id\":\"401873045\",\"start_time\":\"2026-11-08T18:00Z\",\"home_team\":\"KC\",\"away_team\":\"NYJ\",\"name\":\"NYJ @ KC\",\"venue\":\"Arrowhead Stadium\",\"city\":\"Kansas City\",\"country\":\"USA\",\"detail\":\"Sun, November 8th at 1:00 PM EST\"},{\"week\":9,\"id\":\"401873042\",\"start_time\":\"2026-11-08T18:00Z\",\"home_team\":\"MIA\",\"away_team\":\"DET\",\"name\":\"DET @ MIA\",\"venue\":\"Hard Rock Stadium\",\"city\":\"Miami Gardens\",\"country\":\"USA\",\"detail\":\"Sun, November 8th at 1:00 PM EST\"},{\"week\":9,\"id\":\"401873039\",\"start_time\":\"2026-11-08T18:00Z\",\"home_team\":\"NO\",\"away_team\":\"CLE\",\"name\":\"CLE @ NO\",\"venue\":\"Caesars Superdome\",\"city\":\"New Orleans\",\"country\":\"USA\",\"detail\":\"Sun, November 8th at 1:00 PM EST\"},{\"week\":9,\"id\":\"401873044\",\"start_time\":\"2026-11-08T18:00Z\",\"home_team\":\"PHI\",\"away_team\":\"NYG\",\"name\":\"NYG @ PHI\",\"venue\":\"Lincoln Financial Field\",\"city\":\"Philadelphia\",\"country\":\"USA\",\"detail\":\"Sun, November 8th at 1:00 PM EST\"},{\"week\":9,\"id\":\"401873043\",\"start_time\":\"2026-11-08T18:00Z\",\"home_team\":\"WSH\",\"away_team\":\"LAR\",\"name\":\"LAR @ WSH\",\"venue\":\"Northwest Stadium\",\"city\":\"Landover\",\"country\":\"USA\",\"detail\":\"Sun, November 8th at 1:00 PM EST\"},{\"week\":9,\"id\":\"401873041\",\"start_time\":\"2026-11-08T18:00Z\",\"home_team\":\"CAR\",\"away_team\":\"DEN\",\"name\":\"DEN @ CAR\",\"venue\":\"Bank of America Stadium\",\"city\":\"Charlotte\",\"country\":\"USA\",\"detail\":\"Sun, November 8th at 1:00 PM EST\"},{\"week\":9,\"id\":\"401873046\",\"start_time\":\"2026-11-08T21:05Z\",\"home_team\":\"LAC\",\"away_team\":\"HOU\",\"name\":\"HOU @ LAC\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Sun, November 8th at 4:05 PM EST\"},{\"week\":9,\"id\":\"401873047\",\"start_time\":\"2026-11-08T21:05Z\",\"home_team\":\"SF\",\"away_team\":\"LV\",\"name\":\"LV @ SF\",\"venue\":\"Levi's Stadium\",\"city\":\"Santa Clara\",\"country\":\"USA\",\"detail\":\"Sun, November 8th at 4:05 PM EST\"},{\"week\":9,\"id\":\"401873049\",\"start_time\":\"2026-11-08T21:25Z\",\"home_team\":\"NE\",\"away_team\":\"GB\",\"name\":\"GB @ NE\",\"venue\":\"Gillette Stadium\",\"city\":\"Foxborough\",\"country\":\"USA\",\"detail\":\"Sun, November 8th at 4:25 PM EST\"},{\"week\":9,\"id\":\"401873048\",\"start_time\":\"2026-11-08T21:25Z\",\"home_team\":\"SEA\",\"away_team\":\"ARI\",\"name\":\"ARI @ SEA\",\"venue\":\"Lumen Field\",\"city\":\"Seattle\",\"country\":\"USA\",\"detail\":\"Sun, November 8th at 4:25 PM EST\"},{\"week\":9,\"id\":\"401873050\",\"start_time\":\"2026-11-09T01:20Z\",\"home_team\":\"CHI\",\"away_team\":\"TB\",\"name\":\"TB @ CHI\",\"venue\":\"Soldier Field\",\"city\":\"Chicago\",\"country\":\"USA\",\"detail\":\"Sun, November 8th at 8:20 PM EST\"},{\"week\":9,\"id\":\"401873051\",\"start_time\":\"2026-11-10T01:15Z\",\"home_team\":\"MIN\",\"away_team\":\"BUF\",\"name\":\"BUF @ MIN\",\"venue\":\"U.S. Bank Stadium\",\"city\":\"Minneapolis\",\"country\":\"USA\",\"detail\":\"Mon, November 9th at 8:15 PM EST\"},{\"week\":10,\"id\":\"401873052\",\"start_time\":\"2026-11-13T01:15Z\",\"home_team\":\"NYG\",\"away_team\":\"WSH\",\"name\":\"WSH @ NYG\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Thu, November 12th at 8:15 PM EST\"},{\"week\":10,\"id\":\"401873053\",\"start_time\":\"2026-11-15T14:30Z\",\"home_team\":\"DET\",\"away_team\":\"NE\",\"name\":\"NE VS DET\",\"venue\":\"FC Bayern Munich Stadium\",\"city\":\"Munich\",\"country\":\"Germany\",\"detail\":\"Sun, November 15th at 9:30 AM EST\"},{\"week\":10,\"id\":\"401873058\",\"start_time\":\"2026-11-15T18:00Z\",\"home_team\":\"ATL\",\"away_team\":\"KC\",\"name\":\"KC @ ATL\",\"venue\":\"Mercedes-Benz Stadium\",\"city\":\"Atlanta\",\"country\":\"USA\",\"detail\":\"Sun, November 15th at 1:00 PM EST\"},{\"week\":10,\"id\":\"401873056\",\"start_time\":\"2026-11-15T18:00Z\",\"home_team\":\"CLE\",\"away_team\":\"HOU\",\"name\":\"HOU @ CLE\",\"venue\":\"Huntington Bank Field\",\"city\":\"Cleveland\",\"country\":\"USA\",\"detail\":\"Sun, November 15th at 1:00 PM EST\"},{\"week\":10,\"id\":\"401873060\",\"start_time\":\"2026-11-15T18:00Z\",\"home_team\":\"GB\",\"away_team\":\"MIN\",\"name\":\"MIN @ GB\",\"venue\":\"Lambeau Field\",\"city\":\"Green Bay\",\"country\":\"USA\",\"detail\":\"Sun, November 15th at 1:00 PM EST\"},{\"week\":10,\"id\":\"401873057\",\"start_time\":\"2026-11-15T18:00Z\",\"home_team\":\"TEN\",\"away_team\":\"JAX\",\"name\":\"JAX @ TEN\",\"venue\":\"Nissan Stadium\",\"city\":\"Nashville\",\"country\":\"USA\",\"detail\":\"Sun, November 15th at 1:00 PM EST\"},{\"week\":10,\"id\":\"401873059\",\"start_time\":\"2026-11-15T18:00Z\",\"home_team\":\"IND\",\"away_team\":\"MIA\",\"name\":\"MIA @ IND\",\"venue\":\"Lucas Oil Stadium\",\"city\":\"Indianapolis\",\"country\":\"USA\",\"detail\":\"Sun, November 15th at 1:00 PM EST\"},{\"week\":10,\"id\":\"401873055\",\"start_time\":\"2026-11-15T18:00Z\",\"home_team\":\"NO\",\"away_team\":\"CAR\",\"name\":\"CAR @ NO\",\"venue\":\"Caesars Superdome\",\"city\":\"New Orleans\",\"country\":\"USA\",\"detail\":\"Sun, November 15th at 1:00 PM EST\"},{\"week\":10,\"id\":\"401873054\",\"start_time\":\"2026-11-15T18:00Z\",\"home_team\":\"NYJ\",\"away_team\":\"BUF\",\"name\":\"BUF @ NYJ\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, November 15th at 1:00 PM EST\"},{\"week\":10,\"id\":\"401873062\",\"start_time\":\"2026-11-15T21:05Z\",\"home_team\":\"LV\",\"away_team\":\"SEA\",\"name\":\"SEA @ LV\",\"venue\":\"Allegiant Stadium\",\"city\":\"Las Vegas\",\"country\":\"USA\",\"detail\":\"Sun, November 15th at 4:05 PM EST\"},{\"week\":10,\"id\":\"401873061\",\"start_time\":\"2026-11-15T21:05Z\",\"home_team\":\"ARI\",\"away_team\":\"LAR\",\"name\":\"LAR @ ARI\",\"venue\":\"State Farm Stadium\",\"city\":\"Glendale\",\"country\":\"USA\",\"detail\":\"Sun, November 15th at 4:05 PM EST\"},{\"week\":10,\"id\":\"401873063\",\"start_time\":\"2026-11-15T21:25Z\",\"home_team\":\"DAL\",\"away_team\":\"SF\",\"name\":\"SF @ DAL\",\"venue\":\"AT&T Stadium\",\"city\":\"Arlington\",\"country\":\"USA\",\"detail\":\"Sun, November 15th at 4:25 PM EST\"},{\"week\":10,\"id\":\"401873064\",\"start_time\":\"2026-11-16T01:20Z\",\"home_team\":\"CIN\",\"away_team\":\"PIT\",\"name\":\"PIT @ CIN\",\"venue\":\"Paycor Stadium\",\"city\":\"Cincinnati\",\"country\":\"USA\",\"detail\":\"Sun, November 15th at 8:20 PM EST\"},{\"week\":10,\"id\":\"401873065\",\"start_time\":\"2026-11-17T01:15Z\",\"home_team\":\"BAL\",\"away_team\":\"LAC\",\"name\":\"LAC @ BAL\",\"venue\":\"M&T Bank Stadium\",\"city\":\"Baltimore\",\"country\":\"USA\",\"detail\":\"Mon, November 16th at 8:15 PM EST\"},{\"week\":11,\"id\":\"401873066\",\"start_time\":\"2026-11-20T01:15Z\",\"home_team\":\"HOU\",\"away_team\":\"IND\",\"name\":\"IND @ HOU\",\"venue\":\"Reliant Stadium\",\"city\":\"Houston\",\"country\":\"USA\",\"detail\":\"Thu, November 19th at 8:15 PM EST\"},{\"week\":11,\"id\":\"401873070\",\"start_time\":\"2026-11-22T18:00Z\",\"home_team\":\"BUF\",\"away_team\":\"MIA\",\"name\":\"MIA @ BUF\",\"venue\":\"Highmark Stadium\",\"city\":\"Orchard Park\",\"country\":\"USA\",\"detail\":\"Sun, November 22nd at 1:00 PM EST\"},{\"week\":11,\"id\":\"401873071\",\"start_time\":\"2026-11-22T18:00Z\",\"home_team\":\"CHI\",\"away_team\":\"NO\",\"name\":\"NO @ CHI\",\"venue\":\"Soldier Field\",\"city\":\"Chicago\",\"country\":\"USA\",\"detail\":\"Sun, November 22nd at 1:00 PM EST\"},{\"week\":11,\"id\":\"401873073\",\"start_time\":\"2026-11-22T18:00Z\",\"home_team\":\"DAL\",\"away_team\":\"TEN\",\"name\":\"TEN @ DAL\",\"venue\":\"AT&T Stadium\",\"city\":\"Arlington\",\"country\":\"USA\",\"detail\":\"Sun, November 22nd at 1:00 PM EST\"},{\"week\":11,\"id\":\"401873072\",\"start_time\":\"2026-11-22T18:00Z\",\"home_team\":\"DET\",\"away_team\":\"TB\",\"name\":\"TB @ DET\",\"venue\":\"Ford Field\",\"city\":\"Detroit\",\"country\":\"USA\",\"detail\":\"Sun, November 22nd at 1:00 PM EST\"},{\"week\":11,\"id\":\"401873067\",\"start_time\":\"2026-11-22T18:00Z\",\"home_team\":\"KC\",\"away_team\":\"ARI\",\"name\":\"ARI @ KC\",\"venue\":\"Arrowhead Stadium\",\"city\":\"Kansas City\",\"country\":\"USA\",\"detail\":\"Sun, November 22nd at 1:00 PM EST\"},{\"week\":11,\"id\":\"401873069\",\"start_time\":\"2026-11-22T18:00Z\",\"home_team\":\"NYG\",\"away_team\":\"JAX\",\"name\":\"JAX @ NYG\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, November 22nd at 1:00 PM EST\"},{\"week\":11,\"id\":\"401873068\",\"start_time\":\"2026-11-22T18:00Z\",\"home_team\":\"CAR\",\"away_team\":\"BAL\",\"name\":\"BAL @ CAR\",\"venue\":\"Bank of America Stadium\",\"city\":\"Charlotte\",\"country\":\"USA\",\"detail\":\"Sun, November 22nd at 1:00 PM EST\"},{\"week\":11,\"id\":\"401873074\",\"start_time\":\"2026-11-22T21:05Z\",\"home_team\":\"LAC\",\"away_team\":\"NYJ\",\"name\":\"NYJ @ LAC\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Sun, November 22nd at 4:05 PM EST\"},{\"week\":11,\"id\":\"401873075\",\"start_time\":\"2026-11-22T21:25Z\",\"home_team\":\"DEN\",\"away_team\":\"LV\",\"name\":\"LV @ DEN\",\"venue\":\"Empower Field at Mile High\",\"city\":\"Denver\",\"country\":\"USA\",\"detail\":\"Sun, November 22nd at 4:25 PM EST\"},{\"week\":11,\"id\":\"401873076\",\"start_time\":\"2026-11-22T21:25Z\",\"home_team\":\"PHI\",\"away_team\":\"PIT\",\"name\":\"PIT @ PHI\",\"venue\":\"Lincoln Financial Field\",\"city\":\"Philadelphia\",\"country\":\"USA\",\"detail\":\"Sun, November 22nd at 4:25 PM EST\"},{\"week\":11,\"id\":\"401873077\",\"start_time\":\"2026-11-23T01:20Z\",\"home_team\":\"SF\",\"away_team\":\"MIN\",\"name\":\"MIN VS SF\",\"venue\":\"Estadio Banorte\",\"city\":\"Mexico City\",\"country\":\"Mexico\",\"detail\":\"Sun, November 22nd at 8:20 PM EST\"},{\"week\":11,\"id\":\"401873078\",\"start_time\":\"2026-11-24T01:15Z\",\"home_team\":\"WSH\",\"away_team\":\"CIN\",\"name\":\"CIN @ WSH\",\"venue\":\"Northwest Stadium\",\"city\":\"Landover\",\"country\":\"USA\",\"detail\":\"Mon, November 23rd at 8:15 PM EST\"},{\"week\":12,\"id\":\"401873079\",\"start_time\":\"2026-11-26T01:00Z\",\"home_team\":\"LAR\",\"away_team\":\"GB\",\"name\":\"GB @ LAR\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Wed, November 25th at 8:00 PM EST\"},{\"week\":12,\"id\":\"401873081\",\"start_time\":\"2026-11-26T18:00Z\",\"home_team\":\"DET\",\"away_team\":\"CHI\",\"name\":\"CHI @ DET\",\"venue\":\"Ford Field\",\"city\":\"Detroit\",\"country\":\"USA\",\"detail\":\"Thu, November 26th at 1:00 PM EST\"},{\"week\":12,\"id\":\"401873080\",\"start_time\":\"2026-11-26T21:30Z\",\"home_team\":\"DAL\",\"away_team\":\"PHI\",\"name\":\"PHI @ DAL\",\"venue\":\"AT&T Stadium\",\"city\":\"Arlington\",\"country\":\"USA\",\"detail\":\"Thu, November 26th at 4:30 PM EST\"},{\"week\":12,\"id\":\"401873082\",\"start_time\":\"2026-11-27T01:20Z\",\"home_team\":\"BUF\",\"away_team\":\"KC\",\"name\":\"KC @ BUF\",\"venue\":\"Highmark Stadium\",\"city\":\"Orchard Park\",\"country\":\"USA\",\"detail\":\"Thu, November 26th at 8:20 PM EST\"},{\"week\":12,\"id\":\"401873083\",\"start_time\":\"2026-11-27T20:00Z\",\"home_team\":\"PIT\",\"away_team\":\"DEN\",\"name\":\"DEN @ PIT\",\"venue\":\"Acrisure Stadium\",\"city\":\"Pittsburgh\",\"country\":\"USA\",\"detail\":\"Fri, November 27th at 3:00 PM EST\"},{\"week\":12,\"id\":\"401873087\",\"start_time\":\"2026-11-29T18:00Z\",\"home_team\":\"CIN\",\"away_team\":\"NO\",\"name\":\"NO @ CIN\",\"venue\":\"Paycor Stadium\",\"city\":\"Cincinnati\",\"country\":\"USA\",\"detail\":\"Sun, November 29th at 1:00 PM EST\"},{\"week\":12,\"id\":\"401873086\",\"start_time\":\"2026-11-29T18:00Z\",\"home_team\":\"CLE\",\"away_team\":\"LV\",\"name\":\"LV @ CLE\",\"venue\":\"Huntington Bank Field\",\"city\":\"Cleveland\",\"country\":\"USA\",\"detail\":\"Sun, November 29th at 1:00 PM EST\"},{\"week\":12,\"id\":\"401873088\",\"start_time\":\"2026-11-29T18:00Z\",\"home_team\":\"IND\",\"away_team\":\"NYG\",\"name\":\"NYG @ IND\",\"venue\":\"Lucas Oil Stadium\",\"city\":\"Indianapolis\",\"country\":\"USA\",\"detail\":\"Sun, November 29th at 1:00 PM EST\"},{\"week\":12,\"id\":\"401873089\",\"start_time\":\"2026-11-29T18:00Z\",\"home_team\":\"MIA\",\"away_team\":\"NYJ\",\"name\":\"NYJ @ MIA\",\"venue\":\"Hard Rock Stadium\",\"city\":\"Miami Gardens\",\"country\":\"USA\",\"detail\":\"Sun, November 29th at 1:00 PM EST\"},{\"week\":12,\"id\":\"401873084\",\"start_time\":\"2026-11-29T18:00Z\",\"home_team\":\"MIN\",\"away_team\":\"ATL\",\"name\":\"ATL @ MIN\",\"venue\":\"U.S. Bank Stadium\",\"city\":\"Minneapolis\",\"country\":\"USA\",\"detail\":\"Sun, November 29th at 1:00 PM EST\"},{\"week\":12,\"id\":\"401873085\",\"start_time\":\"2026-11-29T18:00Z\",\"home_team\":\"HOU\",\"away_team\":\"BAL\",\"name\":\"BAL @ HOU\",\"venue\":\"Reliant Stadium\",\"city\":\"Houston\",\"country\":\"USA\",\"detail\":\"Sun, November 29th at 1:00 PM EST\"},{\"week\":12,\"id\":\"401873090\",\"start_time\":\"2026-11-29T21:05Z\",\"home_team\":\"JAX\",\"away_team\":\"TEN\",\"name\":\"TEN @ JAX\",\"venue\":\"EverBank Stadium\",\"city\":\"Jacksonville\",\"country\":\"USA\",\"detail\":\"Sun, November 29th at 4:05 PM EST\"},{\"week\":12,\"id\":\"401873092\",\"start_time\":\"2026-11-29T21:25Z\",\"home_team\":\"ARI\",\"away_team\":\"WSH\",\"name\":\"WSH @ ARI\",\"venue\":\"State Farm Stadium\",\"city\":\"Glendale\",\"country\":\"USA\",\"detail\":\"Sun, November 29th at 4:25 PM EST\"},{\"week\":12,\"id\":\"401873091\",\"start_time\":\"2026-11-29T21:25Z\",\"home_team\":\"SF\",\"away_team\":\"SEA\",\"name\":\"SEA @ SF\",\"venue\":\"Levi's Stadium\",\"city\":\"Santa Clara\",\"country\":\"USA\",\"detail\":\"Sun, November 29th at 4:25 PM EST\"},{\"week\":12,\"id\":\"401873093\",\"start_time\":\"2026-11-30T01:20Z\",\"home_team\":\"LAC\",\"away_team\":\"NE\",\"name\":\"NE @ LAC\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Sun, November 29th at 8:20 PM EST\"},{\"week\":12,\"id\":\"401873094\",\"start_time\":\"2026-12-01T01:15Z\",\"home_team\":\"TB\",\"away_team\":\"CAR\",\"name\":\"CAR @ TB\",\"venue\":\"Raymond James Stadium\",\"city\":\"Tampa\",\"country\":\"USA\",\"detail\":\"Mon, November 30th at 8:15 PM EST\"},{\"week\":13,\"id\":\"401873096\",\"start_time\":\"2026-12-04T01:15Z\",\"home_team\":\"LAR\",\"away_team\":\"KC\",\"name\":\"KC @ LAR\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Thu, December 3rd at 8:15 PM EST\"},{\"week\":13,\"id\":\"401873098\",\"start_time\":\"2026-12-06T18:00Z\",\"home_team\":\"ATL\",\"away_team\":\"DET\",\"name\":\"DET @ ATL\",\"venue\":\"Mercedes-Benz Stadium\",\"city\":\"Atlanta\",\"country\":\"USA\",\"detail\":\"Sun, December 6th at 1:00 PM EST\"},{\"week\":13,\"id\":\"401873100\",\"start_time\":\"2026-12-06T18:00Z\",\"home_team\":\"CHI\",\"away_team\":\"JAX\",\"name\":\"JAX @ CHI\",\"venue\":\"Soldier Field\",\"city\":\"Chicago\",\"country\":\"USA\",\"detail\":\"Sun, December 6th at 1:00 PM EST\"},{\"week\":13,\"id\":\"401873097\",\"start_time\":\"2026-12-06T18:00Z\",\"home_team\":\"CLE\",\"away_team\":\"CIN\",\"name\":\"CIN @ CLE\",\"venue\":\"Huntington Bank Field\",\"city\":\"Cleveland\",\"country\":\"USA\",\"detail\":\"Sun, December 6th at 1:00 PM EST\"},{\"week\":13,\"id\":\"401873102\",\"start_time\":\"2026-12-06T18:00Z\",\"home_team\":\"TEN\",\"away_team\":\"WSH\",\"name\":\"WSH @ TEN\",\"venue\":\"Nissan Stadium\",\"city\":\"Nashville\",\"country\":\"USA\",\"detail\":\"Sun, December 6th at 1:00 PM EST\"},{\"week\":13,\"id\":\"401873099\",\"start_time\":\"2026-12-06T18:00Z\",\"home_team\":\"NO\",\"away_team\":\"GB\",\"name\":\"GB @ NO\",\"venue\":\"Caesars Superdome\",\"city\":\"New Orleans\",\"country\":\"USA\",\"detail\":\"Sun, December 6th at 1:00 PM EST\"},{\"week\":13,\"id\":\"401873095\",\"start_time\":\"2026-12-06T18:00Z\",\"home_team\":\"NYG\",\"away_team\":\"SF\",\"name\":\"SF @ NYG\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, December 6th at 1:00 PM EST\"},{\"week\":13,\"id\":\"401873101\",\"start_time\":\"2026-12-06T18:00Z\",\"home_team\":\"TB\",\"away_team\":\"LAC\",\"name\":\"LAC @ TB\",\"venue\":\"Raymond James Stadium\",\"city\":\"Tampa\",\"country\":\"USA\",\"detail\":\"Sun, December 6th at 1:00 PM EST\"},{\"week\":13,\"id\":\"401873103\",\"start_time\":\"2026-12-06T21:05Z\",\"home_team\":\"DEN\",\"away_team\":\"MIA\",\"name\":\"MIA @ DEN\",\"venue\":\"Empower Field at Mile High\",\"city\":\"Denver\",\"country\":\"USA\",\"detail\":\"Sun, December 6th at 4:05 PM EST\"},{\"week\":13,\"id\":\"401873104\",\"start_time\":\"2026-12-06T21:05Z\",\"home_team\":\"ARI\",\"away_team\":\"PHI\",\"name\":\"PHI @ ARI\",\"venue\":\"State Farm Stadium\",\"city\":\"Glendale\",\"country\":\"USA\",\"detail\":\"Sun, December 6th at 4:05 PM EST\"},{\"week\":13,\"id\":\"401873106\",\"start_time\":\"2026-12-06T21:25Z\",\"home_team\":\"MIN\",\"away_team\":\"CAR\",\"name\":\"CAR @ MIN\",\"venue\":\"U.S. Bank Stadium\",\"city\":\"Minneapolis\",\"country\":\"USA\",\"detail\":\"Sun, December 6th at 4:25 PM EST\"},{\"week\":13,\"id\":\"401873105\",\"start_time\":\"2026-12-06T21:25Z\",\"home_team\":\"NE\",\"away_team\":\"BUF\",\"name\":\"BUF @ NE\",\"venue\":\"Gillette Stadium\",\"city\":\"Foxborough\",\"country\":\"USA\",\"detail\":\"Sun, December 6th at 4:25 PM EST\"},{\"week\":13,\"id\":\"401873107\",\"start_time\":\"2026-12-07T01:20Z\",\"home_team\":\"PIT\",\"away_team\":\"HOU\",\"name\":\"HOU @ PIT\",\"venue\":\"Acrisure Stadium\",\"city\":\"Pittsburgh\",\"country\":\"USA\",\"detail\":\"Sun, December 6th at 8:20 PM EST\"},{\"week\":13,\"id\":\"401873108\",\"start_time\":\"2026-12-08T01:15Z\",\"home_team\":\"SEA\",\"away_team\":\"DAL\",\"name\":\"DAL @ SEA\",\"venue\":\"Lumen Field\",\"city\":\"Seattle\",\"country\":\"USA\",\"detail\":\"Mon, December 7th at 8:15 PM EST\"},{\"week\":14,\"id\":\"401873109\",\"start_time\":\"2026-12-11T01:15Z\",\"home_team\":\"NE\",\"away_team\":\"MIN\",\"name\":\"MIN @ NE\",\"venue\":\"Gillette Stadium\",\"city\":\"Foxborough\",\"country\":\"USA\",\"detail\":\"Thu, December 10th at 8:15 PM EST\"},{\"week\":14,\"id\":\"401873110\",\"start_time\":\"2026-12-13T18:00Z\",\"home_team\":\"CLE\",\"away_team\":\"ATL\",\"name\":\"ATL @ CLE\",\"venue\":\"Huntington Bank Field\",\"city\":\"Cleveland\",\"country\":\"USA\",\"detail\":\"Sun, December 13th at 1:00 PM EST\"},{\"week\":14,\"id\":\"401873117\",\"start_time\":\"2026-12-13T18:00Z\",\"home_team\":\"DET\",\"away_team\":\"TEN\",\"name\":\"TEN @ DET\",\"venue\":\"Ford Field\",\"city\":\"Detroit\",\"country\":\"USA\",\"detail\":\"Sun, December 13th at 1:00 PM EST\"},{\"week\":14,\"id\":\"401873111\",\"start_time\":\"2026-12-13T18:00Z\",\"home_team\":\"MIA\",\"away_team\":\"CHI\",\"name\":\"CHI @ MIA\",\"venue\":\"Hard Rock Stadium\",\"city\":\"Miami Gardens\",\"country\":\"USA\",\"detail\":\"Sun, December 13th at 1:00 PM EST\"},{\"week\":14,\"id\":\"401873112\",\"start_time\":\"2026-12-13T18:00Z\",\"home_team\":\"NYJ\",\"away_team\":\"DEN\",\"name\":\"DEN @ NYJ\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, December 13th at 1:00 PM EST\"},{\"week\":14,\"id\":\"401873114\",\"start_time\":\"2026-12-13T18:00Z\",\"home_team\":\"PHI\",\"away_team\":\"IND\",\"name\":\"IND @ PHI\",\"venue\":\"Lincoln Financial Field\",\"city\":\"Philadelphia\",\"country\":\"USA\",\"detail\":\"Sun, December 13th at 1:00 PM EST\"},{\"week\":14,\"id\":\"401873113\",\"start_time\":\"2026-12-13T18:00Z\",\"home_team\":\"WSH\",\"away_team\":\"HOU\",\"name\":\"HOU @ WSH\",\"venue\":\"Northwest Stadium\",\"city\":\"Landover\",\"country\":\"USA\",\"detail\":\"Sun, December 13th at 1:00 PM EST\"},{\"week\":14,\"id\":\"401873115\",\"start_time\":\"2026-12-13T18:00Z\",\"home_team\":\"CAR\",\"away_team\":\"NO\",\"name\":\"NO @ CAR\",\"venue\":\"Bank of America Stadium\",\"city\":\"Charlotte\",\"country\":\"USA\",\"detail\":\"Sun, December 13th at 1:00 PM EST\"},{\"week\":14,\"id\":\"401873116\",\"start_time\":\"2026-12-13T18:00Z\",\"home_team\":\"BAL\",\"away_team\":\"TB\",\"name\":\"TB @ BAL\",\"venue\":\"M&T Bank Stadium\",\"city\":\"Baltimore\",\"country\":\"USA\",\"detail\":\"Sun, December 13th at 1:00 PM EST\"},{\"week\":14,\"id\":\"401873118\",\"start_time\":\"2026-12-13T21:05Z\",\"home_team\":\"LV\",\"away_team\":\"LAC\",\"name\":\"LAC @ LV\",\"venue\":\"Allegiant Stadium\",\"city\":\"Las Vegas\",\"country\":\"USA\",\"detail\":\"Sun, December 13th at 4:05 PM EST\"},{\"week\":14,\"id\":\"401873119\",\"start_time\":\"2026-12-13T21:25Z\",\"home_team\":\"CIN\",\"away_team\":\"KC\",\"name\":\"KC @ CIN\",\"venue\":\"Paycor Stadium\",\"city\":\"Cincinnati\",\"country\":\"USA\",\"detail\":\"Sun, December 13th at 4:25 PM EST\"},{\"week\":14,\"id\":\"401873120\",\"start_time\":\"2026-12-13T21:25Z\",\"home_team\":\"SF\",\"away_team\":\"LAR\",\"name\":\"LAR @ SF\",\"venue\":\"Levi's Stadium\",\"city\":\"Santa Clara\",\"country\":\"USA\",\"detail\":\"Sun, December 13th at 4:25 PM EST\"},{\"week\":14,\"id\":\"401873121\",\"start_time\":\"2026-12-13T21:25Z\",\"home_team\":\"SEA\",\"away_team\":\"NYG\",\"name\":\"NYG @ SEA\",\"venue\":\"Lumen Field\",\"city\":\"Seattle\",\"country\":\"USA\",\"detail\":\"Sun, December 13th at 4:25 PM EST\"},{\"week\":14,\"id\":\"401873122\",\"start_time\":\"2026-12-14T01:20Z\",\"home_team\":\"GB\",\"away_team\":\"BUF\",\"name\":\"BUF @ GB\",\"venue\":\"Lambeau Field\",\"city\":\"Green Bay\",\"country\":\"USA\",\"detail\":\"Sun, December 13th at 8:20 PM EST\"},{\"week\":14,\"id\":\"401873123\",\"start_time\":\"2026-12-15T01:15Z\",\"home_team\":\"JAX\",\"away_team\":\"PIT\",\"name\":\"PIT @ JAX\",\"venue\":\"EverBank Stadium\",\"city\":\"Jacksonville\",\"country\":\"USA\",\"detail\":\"Mon, December 14th at 8:15 PM EST\"},{\"week\":15,\"id\":\"401873124\",\"start_time\":\"2026-12-18T01:15Z\",\"home_team\":\"LAC\",\"away_team\":\"SF\",\"name\":\"SF @ LAC\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Thu, December 17th at 8:15 PM EST\"},{\"week\":15,\"id\":\"401873125\",\"start_time\":\"2026-12-19T22:00Z\",\"home_team\":\"PHI\",\"away_team\":\"SEA\",\"name\":\"SEA @ PHI\",\"venue\":\"Lincoln Financial Field\",\"city\":\"Philadelphia\",\"country\":\"USA\",\"detail\":\"Sat, December 19th at 5:00 PM EST\"},{\"week\":15,\"id\":\"401873126\",\"start_time\":\"2026-12-20T01:20Z\",\"home_team\":\"BUF\",\"away_team\":\"CHI\",\"name\":\"CHI @ BUF\",\"venue\":\"Highmark Stadium\",\"city\":\"Orchard Park\",\"country\":\"USA\",\"detail\":\"Sat, December 19th at 8:20 PM EST\"},{\"week\":15,\"id\":\"401873133\",\"start_time\":\"2026-12-20T18:00Z\",\"home_team\":\"GB\",\"away_team\":\"MIA\",\"name\":\"MIA @ GB\",\"venue\":\"Lambeau Field\",\"city\":\"Green Bay\",\"country\":\"USA\",\"detail\":\"Sun, December 20th at 1:00 PM EST\"},{\"week\":15,\"id\":\"401873131\",\"start_time\":\"2026-12-20T18:00Z\",\"home_team\":\"TEN\",\"away_team\":\"IND\",\"name\":\"IND @ TEN\",\"venue\":\"Nissan Stadium\",\"city\":\"Nashville\",\"country\":\"USA\",\"detail\":\"Sun, December 20th at 1:00 PM EST\"},{\"week\":15,\"id\":\"401873130\",\"start_time\":\"2026-12-20T18:00Z\",\"home_team\":\"NYG\",\"away_team\":\"CLE\",\"name\":\"CLE @ NYG\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, December 20th at 1:00 PM EST\"},{\"week\":15,\"id\":\"401873128\",\"start_time\":\"2026-12-20T18:00Z\",\"home_team\":\"PIT\",\"away_team\":\"BAL\",\"name\":\"BAL @ PIT\",\"venue\":\"Acrisure Stadium\",\"city\":\"Pittsburgh\",\"country\":\"USA\",\"detail\":\"Sun, December 20th at 1:00 PM EST\"},{\"week\":15,\"id\":\"401873134\",\"start_time\":\"2026-12-20T18:00Z\",\"home_team\":\"TB\",\"away_team\":\"NO\",\"name\":\"NO @ TB\",\"venue\":\"Raymond James Stadium\",\"city\":\"Tampa\",\"country\":\"USA\",\"detail\":\"Sun, December 20th at 1:00 PM EST\"},{\"week\":15,\"id\":\"401873127\",\"start_time\":\"2026-12-20T18:00Z\",\"home_team\":\"WSH\",\"away_team\":\"ATL\",\"name\":\"ATL @ WSH\",\"venue\":\"Northwest Stadium\",\"city\":\"Landover\",\"country\":\"USA\",\"detail\":\"Sun, December 20th at 1:00 PM EST\"},{\"week\":15,\"id\":\"401873129\",\"start_time\":\"2026-12-20T18:00Z\",\"home_team\":\"CAR\",\"away_team\":\"CIN\",\"name\":\"CIN @ CAR\",\"venue\":\"Bank of America Stadium\",\"city\":\"Charlotte\",\"country\":\"USA\",\"detail\":\"Sun, December 20th at 1:00 PM EST\"},{\"week\":15,\"id\":\"401873132\",\"start_time\":\"2026-12-20T18:00Z\",\"home_team\":\"HOU\",\"away_team\":\"JAX\",\"name\":\"JAX @ HOU\",\"venue\":\"Reliant Stadium\",\"city\":\"Houston\",\"country\":\"USA\",\"detail\":\"Sun, December 20th at 1:00 PM EST\"},{\"week\":15,\"id\":\"401873135\",\"start_time\":\"2026-12-20T21:05Z\",\"home_team\":\"ARI\",\"away_team\":\"NYJ\",\"name\":\"NYJ @ ARI\",\"venue\":\"State Farm Stadium\",\"city\":\"Glendale\",\"country\":\"USA\",\"detail\":\"Sun, December 20th at 4:05 PM EST\"},{\"week\":15,\"id\":\"401873137\",\"start_time\":\"2026-12-20T21:25Z\",\"home_team\":\"LV\",\"away_team\":\"DEN\",\"name\":\"DEN @ LV\",\"venue\":\"Allegiant Stadium\",\"city\":\"Las Vegas\",\"country\":\"USA\",\"detail\":\"Sun, December 20th at 4:25 PM EST\"},{\"week\":15,\"id\":\"401873136\",\"start_time\":\"2026-12-20T21:25Z\",\"home_team\":\"LAR\",\"away_team\":\"DAL\",\"name\":\"DAL @ LAR\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"Sun, December 20th at 4:25 PM EST\"},{\"week\":15,\"id\":\"401873138\",\"start_time\":\"2026-12-21T01:20Z\",\"home_team\":\"MIN\",\"away_team\":\"DET\",\"name\":\"DET @ MIN\",\"venue\":\"U.S. Bank Stadium\",\"city\":\"Minneapolis\",\"country\":\"USA\",\"detail\":\"Sun, December 20th at 8:20 PM EST\"},{\"week\":15,\"id\":\"401873139\",\"start_time\":\"2026-12-22T01:15Z\",\"home_team\":\"KC\",\"away_team\":\"NE\",\"name\":\"NE @ KC\",\"venue\":\"Arrowhead Stadium\",\"city\":\"Kansas City\",\"country\":\"USA\",\"detail\":\"Mon, December 21st at 8:15 PM EST\"},{\"week\":16,\"id\":\"401873140\",\"start_time\":\"2026-12-25T01:15Z\",\"home_team\":\"PHI\",\"away_team\":\"HOU\",\"name\":\"HOU @ PHI\",\"venue\":\"Lincoln Financial Field\",\"city\":\"Philadelphia\",\"country\":\"USA\",\"detail\":\"Thu, December 24th at 8:15 PM EST\"},{\"week\":16,\"id\":\"401873141\",\"start_time\":\"2026-12-25T18:00Z\",\"home_team\":\"CHI\",\"away_team\":\"GB\",\"name\":\"GB @ CHI\",\"venue\":\"Soldier Field\",\"city\":\"Chicago\",\"country\":\"USA\",\"detail\":\"Fri, December 25th at 1:00 PM EST\"},{\"week\":16,\"id\":\"401873142\",\"start_time\":\"2026-12-25T21:30Z\",\"home_team\":\"DEN\",\"away_team\":\"BUF\",\"name\":\"BUF @ DEN\",\"venue\":\"Empower Field at Mile High\",\"city\":\"Denver\",\"country\":\"USA\",\"detail\":\"Fri, December 25th at 4:30 PM EST\"},{\"week\":16,\"id\":\"401873143\",\"start_time\":\"2026-12-26T01:15Z\",\"home_team\":\"SEA\",\"away_team\":\"LAR\",\"name\":\"LAR @ SEA\",\"venue\":\"Lumen Field\",\"city\":\"Seattle\",\"country\":\"USA\",\"detail\":\"Fri, December 25th at 8:15 PM EST\"},{\"week\":16,\"id\":\"401873146\",\"start_time\":\"2026-12-27T05:00Z\",\"home_team\":\"ATL\",\"away_team\":\"TB\",\"name\":\"TB @ ATL\",\"venue\":\"Mercedes-Benz Stadium\",\"city\":\"Atlanta\",\"country\":\"USA\",\"detail\":\"12/27 - TBD\"},{\"week\":16,\"id\":\"401873145\",\"start_time\":\"2026-12-27T05:00Z\",\"home_team\":\"IND\",\"away_team\":\"CIN\",\"name\":\"CIN @ IND\",\"venue\":\"Lucas Oil Stadium\",\"city\":\"Indianapolis\",\"country\":\"USA\",\"detail\":\"12/27 - TBD\"},{\"week\":16,\"id\":\"401873147\",\"start_time\":\"2026-12-27T05:00Z\",\"home_team\":\"MIN\",\"away_team\":\"WSH\",\"name\":\"WSH @ MIN\",\"venue\":\"U.S. Bank Stadium\",\"city\":\"Minneapolis\",\"country\":\"USA\",\"detail\":\"12/27 - TBD\"},{\"week\":16,\"id\":\"401873144\",\"start_time\":\"2026-12-27T05:00Z\",\"home_team\":\"PIT\",\"away_team\":\"CAR\",\"name\":\"CAR @ PIT\",\"venue\":\"Acrisure Stadium\",\"city\":\"Pittsburgh\",\"country\":\"USA\",\"detail\":\"12/27 - TBD\"},{\"week\":16,\"id\":\"401873150\",\"start_time\":\"2026-12-27T18:00Z\",\"home_team\":\"MIA\",\"away_team\":\"LAC\",\"name\":\"LAC @ MIA\",\"venue\":\"Hard Rock Stadium\",\"city\":\"Miami Gardens\",\"country\":\"USA\",\"detail\":\"Sun, December 27th at 1:00 PM EST\"},{\"week\":16,\"id\":\"401873148\",\"start_time\":\"2026-12-27T18:00Z\",\"home_team\":\"NO\",\"away_team\":\"ARI\",\"name\":\"ARI @ NO\",\"venue\":\"Caesars Superdome\",\"city\":\"New Orleans\",\"country\":\"USA\",\"detail\":\"Sun, December 27th at 1:00 PM EST\"},{\"week\":16,\"id\":\"401873151\",\"start_time\":\"2026-12-27T18:00Z\",\"home_team\":\"NYJ\",\"away_team\":\"NE\",\"name\":\"NE @ NYJ\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, December 27th at 1:00 PM EST\"},{\"week\":16,\"id\":\"401873149\",\"start_time\":\"2026-12-27T18:00Z\",\"home_team\":\"BAL\",\"away_team\":\"CLE\",\"name\":\"CLE @ BAL\",\"venue\":\"M&T Bank Stadium\",\"city\":\"Baltimore\",\"country\":\"USA\",\"detail\":\"Sun, December 27th at 1:00 PM EST\"},{\"week\":16,\"id\":\"401873152\",\"start_time\":\"2026-12-27T21:05Z\",\"home_team\":\"LV\",\"away_team\":\"TEN\",\"name\":\"TEN @ LV\",\"venue\":\"Allegiant Stadium\",\"city\":\"Las Vegas\",\"country\":\"USA\",\"detail\":\"Sun, December 27th at 4:05 PM EST\"},{\"week\":16,\"id\":\"401873153\",\"start_time\":\"2026-12-27T21:25Z\",\"home_team\":\"KC\",\"away_team\":\"SF\",\"name\":\"SF @ KC\",\"venue\":\"Arrowhead Stadium\",\"city\":\"Kansas City\",\"country\":\"USA\",\"detail\":\"Sun, December 27th at 4:25 PM EST\"},{\"week\":16,\"id\":\"401873154\",\"start_time\":\"2026-12-28T01:20Z\",\"home_team\":\"DAL\",\"away_team\":\"JAX\",\"name\":\"JAX @ DAL\",\"venue\":\"AT&T Stadium\",\"city\":\"Arlington\",\"country\":\"USA\",\"detail\":\"Sun, December 27th at 8:20 PM EST\"},{\"week\":16,\"id\":\"401873155\",\"start_time\":\"2026-12-29T01:15Z\",\"home_team\":\"DET\",\"away_team\":\"NYG\",\"name\":\"NYG @ DET\",\"venue\":\"Ford Field\",\"city\":\"Detroit\",\"country\":\"USA\",\"detail\":\"Mon, December 28th at 8:15 PM EST\"},{\"week\":17,\"id\":\"401873156\",\"start_time\":\"2027-01-01T01:15Z\",\"home_team\":\"CIN\",\"away_team\":\"BAL\",\"name\":\"BAL @ CIN\",\"venue\":\"Paycor Stadium\",\"city\":\"Cincinnati\",\"country\":\"USA\",\"detail\":\"Thu, December 31st at 8:15 PM EST\"},{\"week\":17,\"id\":\"401873157\",\"start_time\":\"2027-01-03T05:00Z\",\"home_team\":\"NE\",\"away_team\":\"DEN\",\"name\":\"DEN @ NE\",\"venue\":\"Gillette Stadium\",\"city\":\"Foxborough\",\"country\":\"USA\",\"detail\":\"1/3 - TBD\"},{\"week\":17,\"id\":\"401873158\",\"start_time\":\"2027-01-03T05:00Z\",\"home_team\":\"LAC\",\"away_team\":\"KC\",\"name\":\"KC @ LAC\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"1/3 - TBD\"},{\"week\":17,\"id\":\"401873159\",\"start_time\":\"2027-01-03T05:00Z\",\"home_team\":\"TB\",\"away_team\":\"LAR\",\"name\":\"LAR @ TB\",\"venue\":\"Raymond James Stadium\",\"city\":\"Tampa\",\"country\":\"USA\",\"detail\":\"1/3 - TBD\"},{\"week\":17,\"id\":\"401873160\",\"start_time\":\"2027-01-03T05:00Z\",\"home_team\":\"JAX\",\"away_team\":\"WSH\",\"name\":\"WSH @ JAX\",\"venue\":\"EverBank Stadium\",\"city\":\"Jacksonville\",\"country\":\"USA\",\"detail\":\"1/3 - TBD\"},{\"week\":17,\"id\":\"401873164\",\"start_time\":\"2027-01-03T18:00Z\",\"home_team\":\"ATL\",\"away_team\":\"NO\",\"name\":\"NO @ ATL\",\"venue\":\"Mercedes-Benz Stadium\",\"city\":\"Atlanta\",\"country\":\"USA\",\"detail\":\"Sun, January 3rd at 1:00 PM EST\"},{\"week\":17,\"id\":\"401873162\",\"start_time\":\"2027-01-03T18:00Z\",\"home_team\":\"CLE\",\"away_team\":\"IND\",\"name\":\"IND @ CLE\",\"venue\":\"Huntington Bank Field\",\"city\":\"Cleveland\",\"country\":\"USA\",\"detail\":\"Sun, January 3rd at 1:00 PM EST\"},{\"week\":17,\"id\":\"401873165\",\"start_time\":\"2027-01-03T18:00Z\",\"home_team\":\"DAL\",\"away_team\":\"NYG\",\"name\":\"NYG @ DAL\",\"venue\":\"AT&T Stadium\",\"city\":\"Arlington\",\"country\":\"USA\",\"detail\":\"Sun, January 3rd at 1:00 PM EST\"},{\"week\":17,\"id\":\"401873166\",\"start_time\":\"2027-01-03T18:00Z\",\"home_team\":\"TEN\",\"away_team\":\"PIT\",\"name\":\"PIT @ TEN\",\"venue\":\"Nissan Stadium\",\"city\":\"Nashville\",\"country\":\"USA\",\"detail\":\"Sun, January 3rd at 1:00 PM EST\"},{\"week\":17,\"id\":\"401873161\",\"start_time\":\"2027-01-03T18:00Z\",\"home_team\":\"MIA\",\"away_team\":\"BUF\",\"name\":\"BUF @ MIA\",\"venue\":\"Hard Rock Stadium\",\"city\":\"Miami Gardens\",\"country\":\"USA\",\"detail\":\"Sun, January 3rd at 1:00 PM EST\"},{\"week\":17,\"id\":\"401873163\",\"start_time\":\"2027-01-03T18:00Z\",\"home_team\":\"NYJ\",\"away_team\":\"MIN\",\"name\":\"MIN @ NYJ\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"Sun, January 3rd at 1:00 PM EST\"},{\"week\":17,\"id\":\"401873167\",\"start_time\":\"2027-01-03T18:00Z\",\"home_team\":\"CAR\",\"away_team\":\"SEA\",\"name\":\"SEA @ CAR\",\"venue\":\"Bank of America Stadium\",\"city\":\"Charlotte\",\"country\":\"USA\",\"detail\":\"Sun, January 3rd at 1:00 PM EST\"},{\"week\":17,\"id\":\"401873168\",\"start_time\":\"2027-01-03T21:05Z\",\"home_team\":\"ARI\",\"away_team\":\"LV\",\"name\":\"LV @ ARI\",\"venue\":\"State Farm Stadium\",\"city\":\"Glendale\",\"country\":\"USA\",\"detail\":\"Sun, January 3rd at 4:05 PM EST\"},{\"week\":17,\"id\":\"401873169\",\"start_time\":\"2027-01-03T21:25Z\",\"home_team\":\"CHI\",\"away_team\":\"DET\",\"name\":\"DET @ CHI\",\"venue\":\"Soldier Field\",\"city\":\"Chicago\",\"country\":\"USA\",\"detail\":\"Sun, January 3rd at 4:25 PM EST\"},{\"week\":17,\"id\":\"401873170\",\"start_time\":\"2027-01-04T01:20Z\",\"home_team\":\"SF\",\"away_team\":\"PHI\",\"name\":\"PHI @ SF\",\"venue\":\"Levi's Stadium\",\"city\":\"Santa Clara\",\"country\":\"USA\",\"detail\":\"Sun, January 3rd at 8:20 PM EST\"},{\"week\":17,\"id\":\"401873171\",\"start_time\":\"2027-01-05T01:15Z\",\"home_team\":\"GB\",\"away_team\":\"HOU\",\"name\":\"HOU @ GB\",\"venue\":\"Lambeau Field\",\"city\":\"Green Bay\",\"country\":\"USA\",\"detail\":\"Mon, January 4th at 8:15 PM EST\"},{\"week\":18,\"id\":\"401873181\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"BUF\",\"away_team\":\"NYJ\",\"name\":\"NYJ @ BUF\",\"venue\":\"Highmark Stadium\",\"city\":\"Orchard Park\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873174\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"CIN\",\"away_team\":\"CLE\",\"name\":\"CLE @ CIN\",\"venue\":\"Paycor Stadium\",\"city\":\"Cincinnati\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873179\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"DEN\",\"away_team\":\"LAC\",\"name\":\"LAC @ DEN\",\"venue\":\"Empower Field at Mile High\",\"city\":\"Denver\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873176\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"GB\",\"away_team\":\"DET\",\"name\":\"DET @ GB\",\"venue\":\"Lambeau Field\",\"city\":\"Green Bay\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873177\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"IND\",\"away_team\":\"JAX\",\"name\":\"JAX @ IND\",\"venue\":\"Lucas Oil Stadium\",\"city\":\"Indianapolis\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873178\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"KC\",\"away_team\":\"LV\",\"name\":\"LV @ KC\",\"venue\":\"Arrowhead Stadium\",\"city\":\"Kansas City\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873185\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"LAR\",\"away_team\":\"SEA\",\"name\":\"SEA @ LAR\",\"venue\":\"SoFi Stadium\",\"city\":\"Inglewood\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873173\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"MIN\",\"away_team\":\"CHI\",\"name\":\"CHI @ MIN\",\"venue\":\"U.S. Bank Stadium\",\"city\":\"Minneapolis\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873180\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"NE\",\"away_team\":\"MIA\",\"name\":\"MIA @ NE\",\"venue\":\"Gillette Stadium\",\"city\":\"Foxborough\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873186\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"NO\",\"away_team\":\"TB\",\"name\":\"TB @ NO\",\"venue\":\"Caesars Superdome\",\"city\":\"New Orleans\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873182\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"NYG\",\"away_team\":\"PHI\",\"name\":\"PHI @ NYG\",\"venue\":\"MetLife Stadium\",\"city\":\"East Rutherford\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873184\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"ARI\",\"away_team\":\"SF\",\"name\":\"SF @ ARI\",\"venue\":\"State Farm Stadium\",\"city\":\"Glendale\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873175\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"WSH\",\"away_team\":\"DAL\",\"name\":\"DAL @ WSH\",\"venue\":\"Northwest Stadium\",\"city\":\"Landover\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873172\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"CAR\",\"away_team\":\"ATL\",\"name\":\"ATL @ CAR\",\"venue\":\"Bank of America Stadium\",\"city\":\"Charlotte\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873183\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"BAL\",\"away_team\":\"PIT\",\"name\":\"PIT @ BAL\",\"venue\":\"M&T Bank Stadium\",\"city\":\"Baltimore\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"},{\"week\":18,\"id\":\"401873187\",\"start_time\":\"2027-01-10T05:00Z\",\"home_team\":\"HOU\",\"away_team\":\"TEN\",\"name\":\"TEN @ HOU\",\"venue\":\"Reliant Stadium\",\"city\":\"Houston\",\"country\":\"USA\",\"detail\":\"1/10 - TBD\"}]");
+var ESPN_API_BASE = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl";
+function cookieHeader(espn_s2, swid) {
+	const s2 = (espn_s2 || "").trim();
+	const id = (swid || "").trim();
+	if (!s2 && !id) return "";
+	const s2Val = s2.replace(/^espn_s2=/i, "");
+	const swidVal = id.replace(/^swid=/i, "");
+	const parts = [];
+	if (s2Val) parts.push(`espn_s2=${s2Val}`);
+	if (swidVal) parts.push(`SWID=${swidVal}`);
+	if (swidVal) parts.push(`swid=${swidVal}`);
+	return parts.join("; ");
+}
+async function espnGet(url, cookies) {
+	const headers = {
+		Accept: "application/json",
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+		Referer: "https://fantasy.espn.com/",
+		Origin: "https://fantasy.espn.com",
+		"X-Requested-With": "XMLHttpRequest"
+	};
+	if (cookies) headers.Cookie = cookies;
+	try {
+		const response = await fetch(url, {
+			method: "GET",
+			headers,
+			redirect: "manual"
+		});
+		if (response.status >= 300 && response.status < 400) {
+			const location = response.headers.get("location") || "";
+			return {
+				ok: false,
+				status: response.status,
+				error: location.includes("login") ? "This ESPN league looks private. Add espn_s2 and SWID cookies from a logged-in browser." : `ESPN redirected the request (${response.status}).`
+			};
+		}
+		if (!response.ok) return {
+			ok: false,
+			status: response.status,
+			error: response.status === 401 || response.status === 403 ? "ESPN denied access. Public leagues need only a league ID; private leagues need both cookies." : `ESPN returned ${response.status}.`
+		};
+		return {
+			ok: true,
+			data: await response.json(),
+			year: 0
+		};
+	} catch (err) {
+		return {
+			ok: false,
+			error: err instanceof Error ? err.message : "ESPN request failed"
+		};
+	}
+}
+async function fetchLeague(opts) {
+	const views = opts.views.map((v) => `view=${encodeURIComponent(v)}`).join("&");
+	const scoring = opts.week != null ? `&scoringPeriodId=${opts.week}` : "";
+	let result = await espnGet(`${ESPN_API_BASE}/seasons/${opts.year}/segments/0/leagues/${opts.leagueId}?${views}${scoring}`, opts.cookies);
+	if (!result.ok && (!opts.cookies || result.status === 301 || result.status === 302)) result = await espnGet(`${ESPN_API_BASE}/leagueHistory/${opts.leagueId}?seasonId=${opts.year}&${views}${scoring}`, opts.cookies);
+	if (result.ok) result.year = opts.year;
+	return result;
+}
+async function fetchWithYearFallback(opts) {
+	const preferred = opts.year ?? 2026;
+	const years = [
+		preferred,
+		preferred - 1,
+		preferred - 2
+	].filter((y, i, a) => a.indexOf(y) === i);
+	let last = null;
+	for (const year of years) {
+		const result = await fetchLeague({
+			...opts,
+			year
+		});
+		last = result;
+		if (result.ok) return result;
+	}
+	return last ?? {
+		ok: false,
+		error: "ESPN league not found."
+	};
+}
+function teamName(team) {
+	return team?.name || `${team?.location ?? ""} ${team?.nickname ?? ""}`.trim() || "Team";
+}
+function teamAbbrev(team) {
+	if (team?.abbrev) return String(team.abbrev).toUpperCase().slice(0, 6);
+	return abbreviateTeamName(teamName(team));
+}
+function sideScore(side) {
+	const live = Number(side?.totalPointsLive);
+	if (Number.isFinite(live) && live > 0) return live;
+	const applied = Number(side?.rosterForCurrentScoringPeriod?.appliedStatTotal);
+	if (Number.isFinite(applied) && applied > 0) return applied;
+	const total = Number(side?.totalPoints);
+	return Number.isFinite(total) ? total : 0;
+}
+function extractEspnTeams(data) {
+	return (Array.isArray(data?.teams) ? data.teams : []).map((t) => ({
+		id: Number(t.id),
+		name: teamName(t),
+		abbrev: teamAbbrev(t)
+	}));
+}
+function actualPosition(entry) {
+	const slotId = Number(entry?.lineupSlotId);
+	const player = entry?.playerPoolEntry?.player;
+	const fromPlayer = player?.defaultPositionId != null ? ESPN_DEFAULT_POSITION[player.defaultPositionId] : void 0;
+	const fromSlot = ESPN_SLOT_POSITION[slotId];
+	if (fromSlot === "FLEX") return fromPlayer || "FLEX";
+	return fromPlayer || fromSlot || "UNKNOWN";
+}
+function extractStarters(team) {
+	const fantasyTeamName = teamName(team);
+	const fantasyAbbrev = teamAbbrev(team);
+	const entries = team?.roster?.entries || [];
+	const starters = [];
+	for (const entry of entries) {
+		const slotId = Number(entry?.lineupSlotId);
+		if (ESPN_BENCH_SLOTS.has(slotId)) continue;
+		const player = entry?.playerPoolEntry?.player;
+		if (!player) continue;
+		const { full, short } = formatPlayerName(player.firstName || "", player.lastName || "");
+		const nflTeam = normalizeNflTeam(ESPN_PRO_TEAM[player.proTeamId] || "FA");
+		starters.push({
+			id: String(player.id),
+			name: full,
+			shortName: short,
+			position: actualPosition(entry),
+			slotId,
+			nflTeam,
+			fantasyTeamName,
+			fantasyAbbrev
+		});
+	}
+	return starters;
+}
+async function loadEspnLeague(opts) {
+	const cookies = cookieHeader(opts.espn_s2, opts.swid);
+	const result = await fetchWithYearFallback({
+		leagueId: opts.leagueId,
+		cookies,
+		views: ["mTeam"],
+		year: opts.year
+	});
+	if (!result.ok) throw new Error(result.error);
+	return {
+		teams: extractEspnTeams(result.data),
+		year: result.year,
+		fallback: result.year !== (opts.year ?? 2026)
+	};
+}
+async function analyzeEspnMatchup(opts) {
+	const cookies = cookieHeader(opts.espn_s2, opts.swid);
+	const result = await fetchWithYearFallback({
+		leagueId: opts.leagueId,
+		cookies,
+		views: [
+			"mMatchup",
+			"mRoster",
+			"mTeam",
+			"mScoreboard"
+		],
+		week: opts.week,
+		year: opts.year
+	});
+	if (!result.ok) throw new Error(result.error);
+	const data = result.data;
+	const teams = data.teams || [];
+	if (!teams.length) throw new Error("ESPN returned no teams for this league.");
+	const userTeam = opts.teamId ? teams.find((t) => String(t.id) === String(opts.teamId)) : teams[0];
+	if (!userTeam) throw new Error(`ESPN team ${opts.teamId} was not found in this league.`);
+	let opponentTeam = null;
+	const matchup = (data.schedule || []).find((m) => Number(m.matchupPeriodId) === Number(opts.week) && (m.home?.teamId === userTeam.id || m.away?.teamId === userTeam.id));
+	let myScore = 0;
+	let oppScore = null;
+	if (matchup) {
+		const userIsHome = matchup.home?.teamId === userTeam.id;
+		const mySide = userIsHome ? matchup.home : matchup.away;
+		const oppSide = userIsHome ? matchup.away : matchup.home;
+		myScore = sideScore(mySide);
+		const oppId = oppSide?.teamId;
+		opponentTeam = teams.find((t) => t.id === oppId) ?? null;
+		if (opponentTeam) oppScore = sideScore(oppSide);
+	}
+	const userName = teamName(userTeam);
+	const userAbbrev = teamAbbrev(userTeam);
+	const oppName = opponentTeam ? teamName(opponentTeam) : "Opponent";
+	const oppAbbrev = opponentTeam ? teamAbbrev(opponentTeam) : "OPP";
+	const leagueName = data.settings?.name || data.settings?.nameSettings?.name || `ESPN ${opts.leagueId}`;
+	return {
+		year: result.year,
+		fallback: result.year !== (opts.year ?? 2026),
+		user: {
+			id: userTeam.id,
+			name: userName,
+			abbrev: userAbbrev,
+			starters: extractStarters(userTeam)
+		},
+		opponent: opponentTeam ? {
+			id: opponentTeam.id,
+			name: oppName,
+			abbrev: oppAbbrev,
+			starters: extractStarters(opponentTeam)
+		} : null,
+		matchup: {
+			id: `espn:${opts.leagueId}:${opts.week}`,
+			leagueName,
+			myTeam: {
+				name: userName,
+				abbrev: userAbbrev,
+				score: myScore
+			},
+			oppTeam: opponentTeam ? {
+				name: oppName,
+				abbrev: oppAbbrev,
+				score: oppScore ?? 0
+			} : null
+		}
+	};
+}
+var SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard";
+var cache = null;
+var TTL_MS = 3e4;
+function inferStatus(startIso, now = Date.now()) {
+	const start = new Date(startIso).getTime();
+	if (!Number.isFinite(start)) return "pre";
+	if (now < start) return "pre";
+	if (now < start + 126e5) return "in";
+	return "post";
+}
+async function fetchLiveSnapshot(week) {
+	const key = String(week ?? "current");
+	const now = Date.now();
+	if (cache && cache.key === key && now - cache.at < TTL_MS) return cache.snap;
+	const url = week != null ? `${SCOREBOARD}?week=${week}&seasontype=2` : SCOREBOARD;
+	const byTeam = {};
+	try {
+		const res = await fetch(url, { headers: { Accept: "application/json" } });
+		if (res.ok) {
+			const data = await res.json();
+			for (const event of data.events || []) {
+				const comp = event.competitions?.[0];
+				const state = (comp?.status?.type?.state || "pre").toLowerCase();
+				const status = state === "in" || state === "post" || state === "pre" ? state : inferStatus(event.date || "");
+				for (const c of comp?.competitors || []) {
+					const team = normalizeNflTeam(c.team?.abbreviation);
+					if (team && team !== "FA") byTeam[team] = status;
+				}
+			}
+		}
+	} catch {}
+	const snap = {
+		byTeam,
+		liveTeams: Object.entries(byTeam).filter(([, s]) => s === "in").map(([t]) => t)
+	};
+	cache = {
+		key,
+		at: now,
+		snap
+	};
+	return snap;
+}
+function applyLiveStatus(schedule, snap, week) {
+	return schedule.map((game) => {
+		if (game.week !== week) return game;
+		const home = normalizeNflTeam(game.home_team);
+		const away = normalizeNflTeam(game.away_team);
+		const status = snap.byTeam[home] || snap.byTeam[away] || inferStatus(game.start_time);
+		return {
+			...game,
+			status
+		};
+	});
+}
+function liveTeamsFromSchedule(schedule, week) {
+	const teams = /* @__PURE__ */ new Set();
+	for (const game of schedule) {
+		if (game.week !== week) continue;
+		if ((game.status || inferStatus(game.start_time)) !== "in") continue;
+		teams.add(normalizeNflTeam(game.home_team));
+		teams.add(normalizeNflTeam(game.away_team));
+	}
+	return [...teams];
+}
+var schedule = nfl_2026_schedule_default;
+async function bootstrapFantasy() {
+	const state = await getNflState();
+	const week = state.week || 1;
+	const snap = await fetchLiveSnapshot(week);
+	const withStatus = applyLiveStatus(schedule, snap, week);
+	return {
+		state,
+		schedule: withStatus,
+		liveTeams: snap.liveTeams.length ? snap.liveTeams : liveTeamsFromSchedule(withStatus, week)
+	};
+}
+async function espnTeams(input) {
+	return loadEspnLeague(input);
+}
+function emptyAcc(seed) {
+	return {
+		...seed,
+		tags: [],
+		platform: /* @__PURE__ */ new Set()
+	};
+}
+function tagKey(tag) {
+	return `${tag.matchupId}|${tag.side}|${tag.abbrev}`;
+}
+function mergeTags(into, extra) {
+	const seen = new Set(into.map(tagKey));
+	for (const tag of extra) {
+		const k = tagKey(tag);
+		if (seen.has(k)) continue;
+		seen.add(k);
+		into.push(tag);
+	}
+}
+function toPlayers(map, counts, week) {
+	const list = [];
+	for (const [id, acc] of map) {
+		const count = counts.get(id) || 0;
+		const game = findGameForTeam(schedule, week, acc.nflTeam);
+		const slot = game ? classifySlot(game) : acc.nflTeam && acc.nflTeam !== "FA" ? "Bye" : "Unknown";
+		const platforms = [...acc.platform].filter((p) => p !== "both");
+		const platform = platforms.includes("espn") && platforms.includes("sleeper") ? "both" : platforms[0] || "sleeper";
+		const myCount = acc.tags.filter((t) => t.side === "mine").length;
+		const oppCount = acc.tags.filter((t) => t.side === "theirs").length;
+		list.push({
+			id,
+			name: acc.playerNameOnly,
+			playerNameOnly: acc.playerNameOnly,
+			position: acc.position,
+			teamAbbr: acc.tags.map((t) => t.abbrev).filter(Boolean).join(","),
+			nflTeam: acc.nflTeam,
+			count: count > 1 ? count : 0,
+			platform,
+			myCount: myCount || void 0,
+			oppCount: oppCount || void 0,
+			kickoff: game ? kickoffLabel(game.start_time) : slot === "Bye" ? "Bye" : void 0,
+			slot,
+			tags: acc.tags
+		});
+	}
+	return list;
+}
+function mergeStart(map, start, counts) {
+	const existing = map.get(start.id);
+	counts.set(start.id, (counts.get(start.id) || 0) + 1);
+	if (!existing) {
+		map.set(start.id, start);
+		return;
+	}
+	mergeTags(existing.tags, start.tags);
+	for (const p of start.platform) existing.platform.add(p);
+	if (existing.nflTeam === "FA" && start.nflTeam !== "FA") existing.nflTeam = start.nflTeam;
+	if (existing.position === "UNKNOWN" && start.position !== "UNKNOWN") existing.position = start.position;
+}
+function accIdentity(acc) {
+	return identityKey(acc.name || acc.playerNameOnly, acc.position);
+}
+function mergeWithin(map, counts) {
+	const byKey = /* @__PURE__ */ new Map();
+	for (const [id, acc] of [...map.entries()]) {
+		const key = accIdentity(acc);
+		const canonical = byKey.get(key);
+		if (!canonical) {
+			byKey.set(key, id);
+			continue;
+		}
+		if (canonical === id) continue;
+		const target = map.get(canonical);
+		if (!target) continue;
+		mergeTags(target.tags, acc.tags);
+		for (const p of acc.platform) target.platform.add(p);
+		if (target.nflTeam === "FA" && acc.nflTeam !== "FA") target.nflTeam = acc.nflTeam;
+		if (target.position === "UNKNOWN" && acc.position !== "UNKNOWN") target.position = acc.position;
+		if (canonical.startsWith("espn-") && !id.startsWith("espn-")) {
+			map.set(id, target);
+			target.id = id;
+			counts.set(id, (counts.get(id) || 0) + (counts.get(canonical) || 0));
+			counts.delete(canonical);
+			map.delete(canonical);
+			byKey.set(key, id);
+		} else {
+			counts.set(canonical, (counts.get(canonical) || 0) + (counts.get(id) || 0));
+			counts.delete(id);
+			map.delete(id);
+		}
+	}
+}
+function alignMaps(myMap, oppMap, myCounts, oppCounts) {
+	mergeWithin(myMap, myCounts);
+	mergeWithin(oppMap, oppCounts);
+	const myByKey = /* @__PURE__ */ new Map();
+	for (const [id, acc] of myMap) myByKey.set(accIdentity(acc), id);
+	for (const [id, acc] of [...oppMap.entries()]) {
+		const key = accIdentity(acc);
+		const mine = myByKey.get(key);
+		if (!mine || mine === id) continue;
+		if (!myMap.get(mine)) continue;
+		if (oppMap.has(mine)) {
+			const existing = oppMap.get(mine);
+			mergeTags(existing.tags, acc.tags);
+			for (const p of acc.platform) existing.platform.add(p);
+			oppCounts.set(mine, (oppCounts.get(mine) || 0) + (oppCounts.get(id) || 0));
+			oppCounts.delete(id);
+			oppMap.delete(id);
+		} else {
+			acc.id = mine;
+			oppMap.set(mine, acc);
+			oppCounts.set(mine, oppCounts.get(id) || 0);
+			oppCounts.delete(id);
+			oppMap.delete(id);
+		}
+	}
+}
+function statusFromScores(my, opp) {
+	if (opp == null) return "pending";
+	if (my === 0 && opp === 0) return "pending";
+	if (my > opp) return "winning";
+	if (my < opp) return "losing";
+	return "tied";
+}
+async function analyzeLineups(input) {
+	const state = await getNflState();
+	const week = Math.max(1, Math.min(18, Number(input.week) || state.week || 1));
+	const season = state.season || String(2026);
+	const warnings = [];
+	let sleeperLeagues = 0;
+	let espnUsed = false;
+	let usedSeason = season;
+	let fallback = false;
+	const myMap = /* @__PURE__ */ new Map();
+	const oppMap = /* @__PURE__ */ new Map();
+	const myCounts = /* @__PURE__ */ new Map();
+	const oppCounts = /* @__PURE__ */ new Map();
+	const matchups = [];
+	const wantSleeper = input.platform === "sleeper" || input.platform === "both";
+	const wantEspn = input.platform === "espn" || input.platform === "both";
+	if (wantSleeper) {
+		const accounts = input.sleeperAccounts && input.sleeperAccounts.length ? input.sleeperAccounts : (input.sleeperUsernames || "").split(/[,\n]/).map((s) => s.trim()).filter(Boolean).map((username) => ({
+			username,
+			leagueIds: null
+		}));
+		if (!accounts.length) {
+			if (input.platform === "sleeper") throw new Error("Add at least one Sleeper username.");
+		} else {
+			const dict = await getSleeperPlayers();
+			const collected = await collectSleeperStarts(accounts, week, season);
+			sleeperLeagues = collected.leaguesUsed;
+			warnings.push(...collected.warnings);
+			for (const row of collected.matchups) matchups.push({
+				...row,
+				platform: "sleeper",
+				status: statusFromScores(row.myTeam.score, row.oppTeam?.score ?? null)
+			});
+			for (const s of collected.myStarts) {
+				const info = sleeperPlayerInfo(s.playerId, dict);
+				mergeStart(myMap, {
+					...emptyAcc({
+						id: s.playerId,
+						name: info.full,
+						playerNameOnly: info.short,
+						position: info.position,
+						nflTeam: info.nflTeam
+					}),
+					tags: [{
+						abbrev: s.fantasyAbbrev,
+						name: s.fantasyName,
+						side: "mine",
+						platform: "sleeper",
+						matchupId: s.matchupId
+					}],
+					platform: /* @__PURE__ */ new Set(["sleeper"])
+				}, myCounts);
+			}
+			for (const s of collected.oppStarts) {
+				const info = sleeperPlayerInfo(s.playerId, dict);
+				mergeStart(oppMap, {
+					...emptyAcc({
+						id: s.playerId,
+						name: info.full,
+						playerNameOnly: info.short,
+						position: info.position,
+						nflTeam: info.nflTeam
+					}),
+					tags: [{
+						abbrev: s.fantasyAbbrev,
+						name: s.fantasyName,
+						side: "theirs",
+						platform: "sleeper",
+						matchupId: s.matchupId
+					}],
+					platform: /* @__PURE__ */ new Set(["sleeper"])
+				}, oppCounts);
+			}
+		}
+	}
+	if (wantEspn) {
+		if (!input.espn?.leagueId) {
+			if (input.platform === "espn") throw new Error("Connect an ESPN league first.");
+		} else try {
+			const espn = await analyzeEspnMatchup({
+				leagueId: input.espn.leagueId,
+				teamId: input.espn.teamId,
+				week,
+				espn_s2: input.espn.espn_s2,
+				swid: input.espn.swid,
+				year: Number(season)
+			});
+			espnUsed = true;
+			usedSeason = espn.year;
+			fallback = espn.fallback;
+			if (espn.fallback) warnings.push(`ESPN had no ${season} data yet — showing ${espn.year} instead.`);
+			matchups.push({
+				...espn.matchup,
+				platform: "espn",
+				status: statusFromScores(espn.matchup.myTeam.score, espn.matchup.oppTeam?.score ?? null)
+			});
+			let dict = null;
+			try {
+				dict = await getSleeperPlayers();
+			} catch {
+				dict = null;
+			}
+			const addEspn = (starters, target, counts, side) => {
+				for (const s of starters) mergeStart(target, {
+					...emptyAcc({
+						id: (dict ? findSleeperIdByName(s.name, s.position, dict) : null) || `espn-${s.id}`,
+						name: s.name,
+						playerNameOnly: s.shortName,
+						position: s.position,
+						nflTeam: normalizeNflTeam(s.nflTeam)
+					}),
+					tags: [{
+						abbrev: s.fantasyAbbrev,
+						name: s.fantasyTeamName,
+						side,
+						platform: "espn",
+						matchupId: espn.matchup.id
+					}],
+					platform: /* @__PURE__ */ new Set(["espn"])
+				}, counts);
+			};
+			addEspn(espn.user.starters, myMap, myCounts, "mine");
+			if (espn.opponent) addEspn(espn.opponent.starters, oppMap, oppCounts, "theirs");
+			else warnings.push("No ESPN opponent found for this week (bye or unmatched).");
+		} catch (err) {
+			const msg = err instanceof Error ? err.message : "ESPN analysis failed.";
+			if (input.platform === "espn") throw err;
+			warnings.push(msg);
+		}
+	}
+	alignMaps(myMap, oppMap, myCounts, oppCounts);
+	const overlapIds = new Set([...myMap.keys()].filter((id) => oppMap.has(id)));
+	const overlapMap = /* @__PURE__ */ new Map();
+	const overlapCounts = /* @__PURE__ */ new Map();
+	for (const id of overlapIds) {
+		const mine = myMap.get(id);
+		const theirs = oppMap.get(id);
+		const merged = {
+			...emptyAcc({
+				id,
+				name: mine.name,
+				playerNameOnly: mine.playerNameOnly,
+				position: mine.position !== "UNKNOWN" ? mine.position : theirs.position,
+				nflTeam: mine.nflTeam !== "FA" ? mine.nflTeam : theirs.nflTeam
+			}),
+			tags: [],
+			platform: /* @__PURE__ */ new Set([...mine.platform, ...theirs.platform])
+		};
+		mergeTags(merged.tags, mine.tags);
+		mergeTags(merged.tags, theirs.tags);
+		overlapMap.set(id, merged);
+		overlapCounts.set(id, (myCounts.get(id) || 0) + (oppCounts.get(id) || 0));
+		myMap.delete(id);
+		oppMap.delete(id);
+	}
+	if (!myMap.size && !oppMap.size && !overlapMap.size) throw new Error(sleeperLeagues === 0 && !espnUsed ? "No lineups found. Check the username / league ID, or wait until lineups lock for this week." : "No starters found for this week. Managers may not have set lineups yet.");
+	const snap = await fetchLiveSnapshot(week);
+	const withStatus = applyLiveStatus(schedule, snap, week);
+	const liveTeams = snap.liveTeams.length ? snap.liveTeams : liveTeamsFromSchedule(withStatus, week);
+	return {
+		my: toPlayers(myMap, myCounts, week),
+		opponent: toPlayers(oppMap, oppCounts, week),
+		overlap: toPlayers(overlapMap, overlapCounts, week),
+		matchups,
+		meta: {
+			week,
+			season,
+			usedSeason,
+			fallback,
+			sleeperLeagues,
+			espnUsed,
+			warnings,
+			liveTeams
+		}
+	};
+}
+//#endregion
+export { analyzeLineups, bootstrapFantasy, espnTeams };
