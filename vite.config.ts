@@ -157,6 +157,13 @@ export default defineConfig(({ command, isPreview }) => ({
     strictPort: true,
   },
   resolve: { tsconfigPaths: true },
+  ssr: {
+    // Workaround for a Nitro v3 Vercel-preset bug where its dependency
+    // tracer drops transitive helper packages (e.g. tslib) that @radix-ui
+    // packages need at runtime. Bundling radix into the SSR output instead
+    // of leaving it external sidesteps the tracer entirely.
+    noExternal: ["@radix-ui/*"],
+  },
   plugins: [
     pgliteBootstrapPlugin(),
     // Before tanstackStart so /auth/popup never falls through to the SPA.
