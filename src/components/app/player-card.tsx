@@ -58,15 +58,22 @@ export function PlayerCard({
           </p>
         </div>
         {player.stdPts != null || player.pprPts != null ? (
-          <p className="shrink-0 pt-0.5 text-xs font-medium text-fg tabular-nums">
-            {(player.stdPts ?? 0).toFixed(1)}/{(player.pprPts ?? 0).toFixed(1)}
-          </p>
+          <div className="flex shrink-0 items-start gap-2.5">
+            <div className="flex flex-col items-center leading-none">
+              <span className="text-lg font-semibold text-fg tabular-nums">{(player.stdPts ?? 0).toFixed(1)}</span>
+              <span className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">Std.</span>
+            </div>
+            <div className="flex flex-col items-center leading-none">
+              <span className="text-lg font-semibold text-fg tabular-nums">{(player.pprPts ?? 0).toFixed(1)}</span>
+              <span className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">PPR</span>
+            </div>
+          </div>
         ) : null}
       </div>
       {tags.length > 0 ? (
         <div className="mt-2 flex flex-wrap gap-1">
           {tags.map((tag) => {
-            const status = matchups.length ? tagForm(tag, matchups) : undefined;
+            const status = matchups.length && tag.side === "mine" ? tagForm(tag, matchups) : undefined;
             return (
               <span
                 key={`${tag.matchupId}-${tag.side}-${tag.abbrev}`}
