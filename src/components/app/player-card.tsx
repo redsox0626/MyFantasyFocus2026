@@ -57,6 +57,11 @@ export function PlayerCard({
             {player.kickoff ? ` · ${player.kickoff}` : ""}
           </p>
         </div>
+        {player.stdPts != null || player.pprPts != null ? (
+          <p className="shrink-0 pt-0.5 text-xs font-medium text-fg tabular-nums">
+            {(player.stdPts ?? 0).toFixed(1)}/{(player.pprPts ?? 0).toFixed(1)}
+          </p>
+        ) : null}
       </div>
       {tags.length > 0 ? (
         <div className="mt-2 flex flex-wrap gap-1">

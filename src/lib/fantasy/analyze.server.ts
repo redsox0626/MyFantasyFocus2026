@@ -9,8 +9,10 @@ import {
   findSleeperIdByName,
   getNflState,
   getSleeperPlayers,
+  getWeekPlayerPoints,
   sleeperPlayerInfo,
 } from "./sleeper.server";
+import type { PlayerPoints } from "./sleeper.server";
 import type {
   AnalysisResult,
   BootstrapData,
@@ -70,7 +72,12 @@ function mergeTags(into: FantasyTeamTag[], extra: FantasyTeamTag[]) {
   }
 }
 
-function toPlayers(map: Map<string, StartAcc>, counts: Map<string, number>, week: number): Player[] {
+function toPlayers(
+  map: Map<string, StartAcc>,
+  counts: Map<string, number>,
+  week: number,
+  points: Map<string, PlayerPoints>,
+): Player[] {
   const list: Player[] = [];
   for (const [id, acc] of map) {
     const count = counts.get(id) || 0;
@@ -81,6 +88,7 @@ function toPlayers(map: Map<string, StartAcc>, counts: Map<string, number>, week
       platforms.includes("espn") && platforms.includes("sleeper") ? "both" : platforms[0] || "sleeper";
     const myCount = acc.tags.filter((t) => t.side === "mine").length;
     const oppCount = acc.tags.filter((t) => t.side === "theirs").length;
+    const pts = points.get(id);
     list.push({
       id,
       name: acc.playerNameOnly,
@@ -95,6 +103,8 @@ function toPlayers(map: Map<string, StartAcc>, counts: Map<string, number>, week
       kickoff: game ? kickoffLabel(game.start_time) : slot === "Bye" ? "Bye" : undefined,
       slot,
       tags: acc.tags,
+      stdPts: pts?.std,
+      pprPts: pts?.ppr,
     });
   }
   return list;
@@ -408,11 +418,12 @@ export async function analyzeLineups(input: {
   const snap = await fetchLiveSnapshot(week);
   const withStatus = applyLiveStatus(schedule, snap, week);
   const liveTeams = snap.liveTeams.length ? snap.liveTeams : liveTeamsFromSchedule(withStatus, week);
+  const points = await getWeekPlayerPoints(season, week);
 
   return {
-    my: toPlayers(myMap, myCounts, week),
-    opponent: toPlayers(oppMap, oppCounts, week),
-    overlap: toPlayers(overlapMap, overlapCounts, week),
+    my: toPlayers(myMap, myCounts, week, points),
+    opponent: toPlayers(oppMap, oppCounts, week, points),
+    overlap: toPlayers(overlapMap, overlapCounts, week, points),
     matchups,
     meta: {
       week,

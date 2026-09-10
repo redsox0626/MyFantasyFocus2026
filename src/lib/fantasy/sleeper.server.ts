@@ -3,6 +3,44 @@ import { abbreviateTeamName, nameKey, normalizePersonName } from "./names";
 import type { NflState, SleeperUserLookup } from "./types";
 
 const SLEEPER = "https://api.sleeper.app/v1";
+// Sleeper's stats endpoint lives at the bare api.sleeper.app domain, not
+// under /v1 like the rest of this file's calls — this is an undocumented
+// endpoint (mirrors the documented /v1/projections shape) that returns
+// pre-computed standard/PPR point totals per player for a given week.
+const SLEEPER_STATS = "https://api.sleeper.app/stats/nfl";
+
+export type PlayerPoints = { std: number; ppr: number };
+
+let statsCache: { key: string; at: number; map: Map<string, PlayerPoints> } | null = null;
+const STATS_TTL_MS = 1000 * 60; // scores move during live games; keep this short
+
+export async function getWeekPlayerPoints(season: string, week: number): Promise<Map<string, PlayerPoints>> {
+  const key = `${season}-${week}`;
+  if (statsCache && statsCache.key === key && Date.now() - statsCache.at < STATS_TTL_MS) {
+    return statsCache.map;
+  }
+  const map = new Map<string, PlayerPoints>();
+  try {
+    const url =
+      `${SLEEPER_STATS}/${season}/${week}?season_type=regular` +
+      `&position[]=QB&position[]=RB&position[]=WR&position[]=TE&position[]=K&position[]=DEF`;
+    const res = await fetch(url, { headers: { Accept: "application/json" } });
+    if (res.ok) {
+      const rows = (await res.json()) as { player_id?: string; stats?: { pts_std?: number; pts_ppr?: number } }[];
+      for (const row of rows) {
+        if (!row.player_id) continue;
+        map.set(row.player_id, {
+          std: row.stats?.pts_std ?? 0,
+          ppr: row.stats?.pts_ppr ?? 0,
+        });
+      }
+    }
+  } catch {
+    // Best-effort — an empty map just means cards render without a score line.
+  }
+  statsCache = { key, at: Date.now(), map };
+  return map;
+}
 
 type SleeperPlayer = {
   first_name?: string;

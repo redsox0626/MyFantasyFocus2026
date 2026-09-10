@@ -64,6 +64,8 @@ export interface Player {
   kickoff?: string;
   slot?: TimeSlot | "Bye" | "Unknown";
   tags?: FantasyTeamTag[];
+  stdPts?: number;
+  pprPts?: number;
 }
 
 export interface EspnCredentials {
