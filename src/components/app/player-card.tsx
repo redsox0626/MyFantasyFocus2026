@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { cardForm } from "@/lib/fantasy/status";
+import { tagForm } from "@/lib/fantasy/status";
 import type { MatchupScore, Player } from "@/lib/fantasy/types";
 import { cn } from "@/lib/utils";
 
@@ -33,8 +33,6 @@ export function PlayerCard({
           platform: "sleeper" as const,
           matchupId: "",
         }));
-  const form = cardForm(player.tags, matchups);
-
   return (
     <article
       className={cn(
@@ -42,9 +40,6 @@ export function PlayerCard({
         tone === "mine" && "bg-mine-wash",
         tone === "theirs" && "bg-theirs-wash",
         tone === "shared" && "bg-shared-wash",
-        form === "winning" && "shadow-win",
-        form === "losing" && "shadow-lose",
-        form === "mixed" && "shadow-mixed",
       )}
     >
       <div className="flex items-start justify-between gap-2">
@@ -65,20 +60,25 @@ export function PlayerCard({
       </div>
       {tags.length > 0 ? (
         <div className="mt-2 flex flex-wrap gap-1">
-          {tags.map((tag) => (
-            <span
-              key={`${tag.matchupId}-${tag.side}-${tag.abbrev}`}
-              title={tag.name}
-              className={cn(
-                "rounded-md px-1.5 py-0.5 font-mono text-[10px] tracking-wide",
-                overlap && tag.side === "mine" && "bg-mine text-mine-fg",
-                overlap && tag.side === "theirs" && "bg-theirs text-theirs-fg",
-                (!overlap || (tag.side !== "mine" && tag.side !== "theirs")) && "bg-subtle text-muted",
-              )}
-            >
-              {tag.abbrev}
-            </span>
-          ))}
+          {tags.map((tag) => {
+            const status = matchups.length ? tagForm(tag, matchups) : undefined;
+            return (
+              <span
+                key={`${tag.matchupId}-${tag.side}-${tag.abbrev}`}
+                title={tag.name}
+                className={cn(
+                  "rounded-md px-1.5 py-0.5 font-mono text-[10px] tracking-wide",
+                  overlap && tag.side === "mine" && "bg-mine text-mine-fg",
+                  overlap && tag.side === "theirs" && "bg-theirs text-theirs-fg",
+                  (!overlap || (tag.side !== "mine" && tag.side !== "theirs")) && "bg-subtle text-muted",
+                  status === "winning" && "shadow-win",
+                  status === "losing" && "shadow-lose",
+                )}
+              >
+                {tag.abbrev}
+              </span>
+            );
+          })}
         </div>
       ) : null}
     </article>
