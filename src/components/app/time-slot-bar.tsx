@@ -9,14 +9,17 @@ export function TimeSlotBar({
   onChange,
   counts,
   liveCount = 0,
+  availableSlots,
 }: {
   value: TimeFilter;
   onChange: (slot: TimeFilter) => void;
   counts?: Partial<Record<TimeSlot, number>>;
   liveCount?: number;
+  availableSlots?: Set<TimeSlot>;
 }) {
   const [open, setOpen] = useState(false);
   const windowSelected = value !== "All" && value !== "Live";
+  const windows = availableSlots ? KICKOFF_WINDOWS.filter((slot) => availableSlots.has(slot)) : KICKOFF_WINDOWS;
 
   return (
     <div className="space-y-2">
@@ -65,7 +68,7 @@ export function TimeSlotBar({
       </div>
       {open ? (
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {KICKOFF_WINDOWS.map((slot) => {
+          {windows.map((slot) => {
             const selected = value === slot;
             const count = counts?.[slot];
             return (

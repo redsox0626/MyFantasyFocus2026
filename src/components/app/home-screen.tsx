@@ -6,7 +6,7 @@ import { LineupBoard } from "@/components/app/lineup-board";
 import { TeamComposer, TeamSummary } from "@/components/app/team-composer";
 import { ScoresBoard } from "@/components/app/scores-board";
 import { TimeSlotBar } from "@/components/app/time-slot-bar";
-import { SEASON_START_LABEL, SEASON_YEAR, TIME_SLOTS, isIdpPosition, normalizeNflTeam } from "@/lib/fantasy/constants";
+import { SEASON_START_LABEL, SEASON_YEAR, TIME_SLOTS, KICKOFF_WINDOWS, isIdpPosition, normalizeNflTeam } from "@/lib/fantasy/constants";
 import { DEMO_RESULT } from "@/lib/fantasy/demo";
 import { getBootstrap, getEspnTeams, runAnalysis } from "@/lib/fantasy/functions";
 import { classifySlot, findGameForTeam, kickoffLabel, teamsInSlot } from "@/lib/fantasy/schedule";
@@ -166,6 +166,11 @@ export function HomeScreen() {
   }, [result, filter, bootstrap, liveTeams, showIdp]);
 
   const counts = result ? slotCounts(result, bootstrap, result.meta.week, showIdp) : undefined;
+  const availableSlots = useMemo(() => {
+    const week = result?.meta.week ?? bootstrap?.state.week ?? 1;
+    const schedule = bootstrap?.schedule || [];
+    return new Set(KICKOFF_WINDOWS.filter((slot) => teamsInSlot(schedule, week, slot).size > 0));
+  }, [bootstrap, result]);
   const livePlayerCount = result
     ? [...result.my, ...result.overlap, ...result.opponent].filter(
         (p) => (showIdp || !isIdpPosition(p.position)) && liveTeams.has(normalizeNflTeam(p.nflTeam)),
@@ -388,7 +393,13 @@ export function HomeScreen() {
 
           {view === "lineups" ? (
             <>
-              <TimeSlotBar value={filter} onChange={setFilter} counts={counts} liveCount={livePlayerCount} />
+              <TimeSlotBar
+                value={filter}
+                onChange={setFilter}
+                counts={counts}
+                liveCount={livePlayerCount}
+                availableSlots={availableSlots}
+              />
               {result.meta.warnings.length > 0 && collapsed ? (
                 <p className="text-xs text-muted text-pretty">{result.meta.warnings[0]}</p>
               ) : null}
