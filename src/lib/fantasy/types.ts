@@ -45,8 +45,8 @@ export interface MatchupScore {
   id: string;
   platform: "sleeper" | "espn";
   leagueName: string;
-  myTeam: { name: string; abbrev: string; score: number };
-  oppTeam: { name: string; abbrev: string; score: number } | null;
+  myTeam: { name: string; abbrev: string; score: number; projected?: number };
+  oppTeam: { name: string; abbrev: string; score: number; projected?: number } | null;
   status: MatchupStatus;
 }
 
@@ -103,6 +103,7 @@ export interface AnalysisMeta {
   espnUsed: boolean;
   warnings: string[];
   liveTeams: string[];
+  redZoneTeams: string[];
 }
 
 export interface AnalysisResult {
@@ -117,6 +118,7 @@ export interface BootstrapData {
   state: NflState;
   schedule: NflGame[];
   liveTeams: string[];
+  redZoneTeams: string[];
 }
 
 export interface SleeperLeagueInfo {

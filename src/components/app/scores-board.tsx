@@ -18,6 +18,9 @@ export function ScoresBoard({ matchups }: { matchups: MatchupScore[] }) {
         const opp = m.oppTeam;
         const mineLead = m.status === "winning";
         const theirsLead = m.status === "losing";
+        const hasProjections = m.myTeam.projected != null && opp?.projected != null;
+        const mineFavored = hasProjections && m.myTeam.projected! > opp!.projected!;
+        const theirsFavored = hasProjections && opp!.projected! > m.myTeam.projected!;
         return (
           <article key={m.id} className="rounded-2xl bg-elevated p-3 shadow-border sm:p-4">
             <div className="mb-3 flex items-center justify-between gap-2">
@@ -31,6 +34,14 @@ export function ScoresBoard({ matchups }: { matchups: MatchupScore[] }) {
                 <p className="mt-1 font-display text-2xl font-semibold tabular-nums leading-none">
                   {formatScore(m.myTeam.score)}
                 </p>
+                {m.myTeam.projected != null ? (
+                  <p className="mt-1 text-[10px] tabular-nums opacity-70">Proj {formatScore(m.myTeam.projected)}</p>
+                ) : null}
+                {mineFavored ? (
+                  <Badge variant={mineLead ? "default" : "mine"} className="mt-1">
+                    Favored
+                  </Badge>
+                ) : null}
               </div>
               <span className="text-xs font-medium text-muted">vs</span>
               <div
@@ -44,6 +55,14 @@ export function ScoresBoard({ matchups }: { matchups: MatchupScore[] }) {
                 <p className="mt-1 font-display text-2xl font-semibold tabular-nums leading-none">
                   {opp ? formatScore(opp.score) : "—"}
                 </p>
+                {opp?.projected != null ? (
+                  <p className="mt-1 text-[10px] tabular-nums opacity-70">Proj {formatScore(opp.projected)}</p>
+                ) : null}
+                {theirsFavored ? (
+                  <Badge variant={theirsLead ? "default" : "theirs"} className="mt-1">
+                    Favored
+                  </Badge>
+                ) : null}
               </div>
             </div>
             <p className="mt-2 text-center text-[11px] text-muted">

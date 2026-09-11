@@ -3,26 +3,27 @@ import { abbreviateTeamName, nameKey, normalizePersonName } from "./names";
 import type { NflState, SleeperUserLookup } from "./types";
 
 const SLEEPER = "https://api.sleeper.app/v1";
-// Sleeper's stats endpoint lives at the bare api.sleeper.app domain, not
-// under /v1 like the rest of this file's calls — this is an undocumented
-// endpoint (mirrors the documented /v1/projections shape) that returns
-// pre-computed standard/PPR point totals per player for a given week.
+// Sleeper's stats/projections endpoints live at the bare api.sleeper.app
+// domain, not under /v1 like the rest of this file's calls — these are
+// undocumented endpoints that return pre-computed standard/PPR point
+// totals per player for a given week (actual stats, or pre-game estimates
+// for the projections variant).
 const SLEEPER_STATS = "https://api.sleeper.app/stats/nfl";
+const SLEEPER_PROJECTIONS = "https://api.sleeper.app/projections/nfl";
 
 export type PlayerPoints = { std: number; ppr: number };
 
 let statsCache: { key: string; at: number; map: Map<string, PlayerPoints> } | null = null;
 const STATS_TTL_MS = 1000 * 60; // scores move during live games; keep this short
 
-export async function getWeekPlayerPoints(season: string, week: number): Promise<Map<string, PlayerPoints>> {
-  const key = `${season}-${week}`;
-  if (statsCache && statsCache.key === key && Date.now() - statsCache.at < STATS_TTL_MS) {
-    return statsCache.map;
-  }
+let projCache: { key: string; at: number; map: Map<string, PlayerPoints> } | null = null;
+const PROJ_TTL_MS = 1000 * 60 * 15; // projections barely move once the week is set
+
+async function fetchWeekPoints(base: string, season: string, week: number): Promise<Map<string, PlayerPoints>> {
   const map = new Map<string, PlayerPoints>();
   try {
     const url =
-      `${SLEEPER_STATS}/${season}/${week}?season_type=regular` +
+      `${base}/${season}/${week}?season_type=regular` +
       `&position[]=QB&position[]=RB&position[]=WR&position[]=TE&position[]=K&position[]=DEF`;
     const res = await fetch(url, { headers: { Accept: "application/json" } });
     if (res.ok) {
@@ -36,9 +37,28 @@ export async function getWeekPlayerPoints(season: string, week: number): Promise
       }
     }
   } catch {
-    // Best-effort — an empty map just means cards render without a score line.
+    // Best-effort — an empty map just means cards/matchups render without that number.
   }
+  return map;
+}
+
+export async function getWeekPlayerPoints(season: string, week: number): Promise<Map<string, PlayerPoints>> {
+  const key = `${season}-${week}`;
+  if (statsCache && statsCache.key === key && Date.now() - statsCache.at < STATS_TTL_MS) {
+    return statsCache.map;
+  }
+  const map = await fetchWeekPoints(SLEEPER_STATS, season, week);
   statsCache = { key, at: Date.now(), map };
+  return map;
+}
+
+export async function getWeekPlayerProjections(season: string, week: number): Promise<Map<string, PlayerPoints>> {
+  const key = `${season}-${week}`;
+  if (projCache && projCache.key === key && Date.now() - projCache.at < PROJ_TTL_MS) {
+    return projCache.map;
+  }
+  const map = await fetchWeekPoints(SLEEPER_PROJECTIONS, season, week);
+  projCache = { key, at: Date.now(), map };
   return map;
 }
 

@@ -6,6 +6,7 @@ const SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/s
 export type LiveSnapshot = {
   byTeam: Record<string, GameStatus>;
   liveTeams: string[];
+  redZoneTeams: string[];
 };
 
 let cache: { key: string; at: number; snap: LiveSnapshot } | null = null;
@@ -26,6 +27,7 @@ export async function fetchLiveSnapshot(week?: number): Promise<LiveSnapshot> {
 
   const url = week != null ? `${SCOREBOARD}?week=${week}&seasontype=2` : SCOREBOARD;
   const byTeam: Record<string, GameStatus> = {};
+  const redZoneTeams: string[] = [];
   try {
     const res = await fetch(url, { headers: { Accept: "application/json" } });
     if (res.ok) {
@@ -34,7 +36,11 @@ export async function fetchLiveSnapshot(week?: number): Promise<LiveSnapshot> {
           date?: string;
           competitions?: Array<{
             status?: { type?: { state?: string } };
-            competitors?: Array<{ team?: { abbreviation?: string } }>;
+            competitors?: Array<{ team?: { id?: string; abbreviation?: string } }>;
+            // Undocumented — present on ESPN's scoreboard while a game is
+            // live, absent otherwise. isRedZone + possession (a team id)
+            // tell us who's driving inside the 20.
+            situation?: { isRedZone?: boolean; possession?: string };
           }>;
         }>;
       };
@@ -42,9 +48,17 @@ export async function fetchLiveSnapshot(week?: number): Promise<LiveSnapshot> {
         const comp = event.competitions?.[0];
         const state = (comp?.status?.type?.state || "pre").toLowerCase();
         const status: GameStatus = state === "in" || state === "post" || state === "pre" ? state : inferStatus(event.date || "");
+        const idToAbbrev = new Map<string, string>();
         for (const c of comp?.competitors || []) {
           const team = normalizeNflTeam(c.team?.abbreviation);
-          if (team && team !== "FA") byTeam[team] = status;
+          if (team && team !== "FA") {
+            byTeam[team] = status;
+            if (c.team?.id) idToAbbrev.set(String(c.team.id), team);
+          }
+        }
+        if (comp?.situation?.isRedZone && comp.situation.possession) {
+          const abbrev = idToAbbrev.get(String(comp.situation.possession));
+          if (abbrev) redZoneTeams.push(abbrev);
         }
       }
     }
@@ -55,7 +69,7 @@ export async function fetchLiveSnapshot(week?: number): Promise<LiveSnapshot> {
   const liveTeams = Object.entries(byTeam)
     .filter(([, s]) => s === "in")
     .map(([t]) => t);
-  const snap = { byTeam, liveTeams };
+  const snap = { byTeam, liveTeams, redZoneTeams };
   cache = { key, at: now, snap };
   return snap;
 }

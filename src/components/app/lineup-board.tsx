@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PlayerCard } from "@/components/app/player-card";
-import { POSITION_LABEL, POSITION_ORDER } from "@/lib/fantasy/constants";
+import { normalizeNflTeam, POSITION_LABEL, POSITION_ORDER } from "@/lib/fantasy/constants";
 import type { MatchupScore, Player } from "@/lib/fantasy/types";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +22,7 @@ function Column({
   tone,
   overlap,
   matchups,
+  redZoneTeams,
 }: {
   title: string;
   hint: string;
@@ -29,6 +30,7 @@ function Column({
   tone: "mine" | "shared" | "theirs";
   overlap?: boolean;
   matchups: MatchupScore[];
+  redZoneTeams: Set<string>;
 }) {
   const groups = groupByPosition(players);
   return (
@@ -64,6 +66,7 @@ function Column({
                     player={player}
                     overlap={overlap}
                     matchups={matchups}
+                    redZone={redZoneTeams.has(normalizeNflTeam(player.nflTeam))}
                   />
                 ))}
               </div>
@@ -82,11 +85,13 @@ export function LineupBoard({
   overlap,
   opponent,
   matchups,
+  redZoneTeams,
 }: {
   my: Player[];
   overlap: Player[];
   opponent: Player[];
   matchups: MatchupScore[];
+  redZoneTeams: Set<string>;
 }) {
   const [col, setCol] = useState<ColId>("my");
   const tabs: { id: ColId; label: string; count: number }[] = [
@@ -116,7 +121,7 @@ export function LineupBoard({
 
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
         <div className={cn(col !== "my" && "hidden lg:block")}>
-          <Column title="My guys" hint="You start them" players={my} tone="mine" matchups={matchups} />
+          <Column title="My guys" hint="You start them" players={my} tone="mine" matchups={matchups} redZoneTeams={redZoneTeams} />
         </div>
         <div className={cn(col !== "overlap" && "hidden lg:block")}>
           <Column
@@ -126,10 +131,18 @@ export function LineupBoard({
             tone="shared"
             overlap
             matchups={matchups}
+            redZoneTeams={redZoneTeams}
           />
         </div>
         <div className={cn(col !== "opponent" && "hidden lg:block")}>
-          <Column title="Their guys" hint="Opponent starts them" players={opponent} tone="theirs" matchups={matchups} />
+          <Column
+            title="Their guys"
+            hint="Opponent starts them"
+            players={opponent}
+            tone="theirs"
+            matchups={matchups}
+            redZoneTeams={redZoneTeams}
+          />
         </div>
       </div>
     </div>

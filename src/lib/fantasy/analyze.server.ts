@@ -10,6 +10,7 @@ import {
   getNflState,
   getSleeperPlayers,
   getWeekPlayerPoints,
+  getWeekPlayerProjections,
   sleeperPlayerInfo,
 } from "./sleeper.server";
 import type { PlayerPoints } from "./sleeper.server";
@@ -33,7 +34,7 @@ export async function bootstrapFantasy(): Promise<BootstrapData> {
   const snap = await fetchLiveSnapshot(week);
   const withStatus = applyLiveStatus(schedule, snap, week);
   const liveTeams = snap.liveTeams.length ? snap.liveTeams : liveTeamsFromSchedule(withStatus, week);
-  return { state, schedule: withStatus, liveTeams };
+  return { state, schedule: withStatus, liveTeams, redZoneTeams: snap.redZoneTeams };
 }
 
 export async function espnTeams(input: {
@@ -220,6 +221,17 @@ export async function analyzeLineups(input: {
   const myCounts = new Map<string, number>();
   const oppCounts = new Map<string, number>();
   const matchups: MatchupScore[] = [];
+  const projections = await getWeekPlayerProjections(season, week);
+  // Summed per matchup id as starters are attributed to my/opp side below,
+  // then applied to each MatchupScore's team totals in a final pass.
+  const projTotals = new Map<string, { my: number; opp: number }>();
+  function addProjected(matchupId: string, side: "my" | "opp", playerId: string) {
+    const p = projections.get(playerId);
+    if (!p) return;
+    const cur = projTotals.get(matchupId) || { my: 0, opp: 0 };
+    cur[side] += p.ppr;
+    projTotals.set(matchupId, cur);
+  }
 
   const wantSleeper = input.platform === "sleeper" || input.platform === "both";
   const wantEspn = input.platform === "espn" || input.platform === "both";
@@ -251,6 +263,7 @@ export async function analyzeLineups(input: {
       }
       for (const s of collected.myStarts) {
         const info = sleeperPlayerInfo(s.playerId, dict);
+        addProjected(s.matchupId, "my", s.playerId);
         mergeStart(
           myMap,
           {
@@ -277,6 +290,7 @@ export async function analyzeLineups(input: {
       }
       for (const s of collected.oppStarts) {
         const info = sleeperPlayerInfo(s.playerId, dict);
+        addProjected(s.matchupId, "opp", s.playerId);
         mergeStart(
           oppMap,
           {
@@ -350,6 +364,7 @@ export async function analyzeLineups(input: {
             for (const s of starters) {
               const sleeperId = dict ? findSleeperIdByName(s.name, s.position, dict) : null;
               const id = sleeperId || `espn-${league.leagueId}-${s.id}`;
+              if (sleeperId) addProjected(matchupId, side === "mine" ? "my" : "opp", sleeperId);
               mergeStart(
                 target,
                 {
@@ -385,6 +400,13 @@ export async function analyzeLineups(input: {
         }
       }
     }
+  }
+
+  for (const m of matchups) {
+    const t = projTotals.get(m.id);
+    if (!t) continue;
+    m.myTeam.projected = Math.round(t.my * 10) / 10;
+    if (m.oppTeam) m.oppTeam.projected = Math.round(t.opp * 10) / 10;
   }
 
   alignMaps(myMap, oppMap, myCounts, oppCounts);
@@ -442,6 +464,7 @@ export async function analyzeLineups(input: {
       espnUsed,
       warnings,
       liveTeams,
+      redZoneTeams: snap.redZoneTeams,
     },
   };
 }

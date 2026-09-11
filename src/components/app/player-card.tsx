@@ -1,3 +1,4 @@
+import { Siren } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { tagForm } from "@/lib/fantasy/status";
 import type { MatchupScore, Player } from "@/lib/fantasy/types";
@@ -20,10 +21,12 @@ export function PlayerCard({
   player,
   overlap,
   matchups,
+  redZone,
 }: {
   player: Player;
   overlap?: boolean;
   matchups: MatchupScore[];
+  redZone?: boolean;
 }) {
   const tone = overlap ? overlapTone(player) : undefined;
   const tags = player.tags?.length
@@ -55,6 +58,15 @@ export function PlayerCard({
               <Badge variant={tone ?? "muted"} className="shrink-0">
                 ×{player.count}
               </Badge>
+            ) : null}
+            {redZone ? (
+              <span
+                title="In the red zone"
+                className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-theirs px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-theirs-fg"
+              >
+                <Siren className="size-3 animate-pulse" />
+                RZ
+              </span>
             ) : null}
           </div>
           <p className="mt-0.5 truncate text-xs text-muted tabular-nums">

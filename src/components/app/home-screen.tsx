@@ -145,6 +145,11 @@ export function HomeScreen() {
     const fromBoot = bootstrap?.liveTeams || [];
     return new Set((fromResult.length ? fromResult : fromBoot).map(normalizeNflTeam));
   }, [result, bootstrap]);
+  const redZoneTeams = useMemo(() => {
+    const fromResult = result?.meta.redZoneTeams || [];
+    const fromBoot = bootstrap?.redZoneTeams || [];
+    return new Set((fromResult.length ? fromResult : fromBoot).map(normalizeNflTeam));
+  }, [result, bootstrap]);
 
   const filtered = useMemo(() => {
     if (!result) return null;
@@ -393,6 +398,7 @@ export function HomeScreen() {
                   overlap={filtered.overlap}
                   opponent={filtered.opponent}
                   matchups={result.matchups}
+                  redZoneTeams={redZoneTeams}
                 />
               ) : null}
               <p className="px-1 text-center text-xs text-muted">
