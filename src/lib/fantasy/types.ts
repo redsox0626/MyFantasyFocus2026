@@ -75,6 +75,11 @@ export interface EspnCredentials {
   teamId?: string;
 }
 
+export interface EspnConnection {
+  creds: EspnCredentials;
+  teams: EspnTeam[];
+}
+
 export interface EspnTeam {
   id: number;
   name: string;

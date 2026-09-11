@@ -3,6 +3,11 @@ import { tagForm } from "@/lib/fantasy/status";
 import type { MatchupScore, Player } from "@/lib/fantasy/types";
 import { cn } from "@/lib/utils";
 
+// Receptions don't factor into these positions' scoring, so a separate PPR
+// figure is redundant — QBs rarely catch passes, and DEF/DL/LB/DB are
+// scored on tackles/turnovers, not receptions.
+const NO_PPR_POSITIONS = new Set(["QB", "DEF", "DL", "LB", "DB"]);
+
 function overlapTone(player: Player): "mine" | "theirs" | "shared" {
   const my = player.myCount || 0;
   const opp = player.oppCount || 0;
@@ -63,10 +68,12 @@ export function PlayerCard({
               <span className="text-lg font-semibold text-fg tabular-nums">{(player.stdPts ?? 0).toFixed(1)}</span>
               <span className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">Std.</span>
             </div>
-            <div className="flex flex-col items-center leading-none">
-              <span className="text-lg font-semibold text-fg tabular-nums">{(player.pprPts ?? 0).toFixed(1)}</span>
-              <span className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">PPR</span>
-            </div>
+            {!NO_PPR_POSITIONS.has(player.position) ? (
+              <div className="flex flex-col items-center leading-none">
+                <span className="text-lg font-semibold text-fg tabular-nums">{(player.pprPts ?? 0).toFixed(1)}</span>
+                <span className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">PPR</span>
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>

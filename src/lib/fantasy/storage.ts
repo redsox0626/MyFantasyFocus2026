@@ -8,24 +8,24 @@ const RECENTS_KEY = "mff.sleeper.recents";
 const PLATFORM_KEY = "mff.platform";
 const IDP_KEY = "mff.showIdp";
 
-export function loadEspnCredentials(): EspnCredentials | null {
+export function loadEspnCredentialsList(): EspnCredentials[] {
   try {
     const raw = localStorage.getItem(ESPN_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as EspnCredentials;
-    if (!parsed?.leagueId) return null;
-    return parsed;
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((c): c is EspnCredentials => Boolean(c?.leagueId));
+    }
+    // Migrate the old single-credentials shape saved before multi-league support.
+    if (parsed?.leagueId) return [parsed as EspnCredentials];
+    return [];
   } catch {
-    return null;
+    return [];
   }
 }
 
-export function saveEspnCredentials(creds: EspnCredentials): void {
-  localStorage.setItem(ESPN_KEY, JSON.stringify(creds));
-}
-
-export function clearEspnCredentials(): void {
-  localStorage.removeItem(ESPN_KEY);
+export function saveEspnCredentialsList(list: EspnCredentials[]): void {
+  localStorage.setItem(ESPN_KEY, JSON.stringify(list));
 }
 
 export function loadSleeperUsernames(): string {

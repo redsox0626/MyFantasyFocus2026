@@ -11,7 +11,7 @@ import {
   loadSleeperRecents,
   pushSleeperRecents,
 } from "@/lib/fantasy/storage";
-import type { EspnCredentials, EspnTeam, SleeperAccount, SleeperRecent, SleeperUserLookup } from "@/lib/fantasy/types";
+import type { EspnConnection, SleeperAccount, SleeperRecent, SleeperUserLookup } from "@/lib/fantasy/types";
 import { cn } from "@/lib/utils";
 
 function useDebounced<T>(value: T, ms: number): T {
@@ -46,9 +46,9 @@ export function TeamComposer({
   season,
   accounts,
   onAccountsChange,
-  espnCreds,
-  espnTeams,
+  espnConnections,
   onEspnOpen,
+  onEspnEdit,
   onEspnTeamChange,
   onEspnDisconnect,
   showIdp,
@@ -62,11 +62,11 @@ export function TeamComposer({
   season: string;
   accounts: SleeperAccount[];
   onAccountsChange: (next: SleeperAccount[]) => void;
-  espnCreds: EspnCredentials | null;
-  espnTeams: EspnTeam[];
+  espnConnections: EspnConnection[];
   onEspnOpen: () => void;
-  onEspnTeamChange: (teamId: string) => void;
-  onEspnDisconnect: () => void;
+  onEspnEdit: (leagueId: string) => void;
+  onEspnTeamChange: (leagueId: string, teamId: string) => void;
+  onEspnDisconnect: (leagueId: string) => void;
   showIdp: boolean;
   onShowIdp: (next: boolean) => void;
   loading: boolean;
@@ -219,10 +219,8 @@ export function TeamComposer({
   }
 
   const sleeperTeams = accounts.reduce((sum, a) => sum + (selectedCount(a) ?? 0), 0);
-  const espnOn = Boolean(espnCreds);
-  const teamCount = sleeperTeams + (espnOn ? 1 : 0);
-  const canAnalyze = accounts.some((a) => !a.missing) || espnOn;
-  const selectedEspnTeam = espnTeams.find((t) => String(t.id) === espnCreds?.teamId);
+  const teamCount = sleeperTeams + espnConnections.length;
+  const canAnalyze = accounts.some((a) => !a.missing) || espnConnections.length > 0;
   const visibleRecents = recents.filter((r) => !addedKeys.has(r.username.toLowerCase())).slice(0, 6);
 
   return (
@@ -348,59 +346,61 @@ export function TeamComposer({
         </div>
       ) : null}
 
-      <div className="mt-4">
-        {espnCreds ? (
-          <div className="rounded-xl bg-surface p-3 shadow-border">
-            <div className="flex items-center gap-3">
-              <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-subtle text-[10px] font-semibold tracking-wide text-fg">
-                ESPN
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-fg">League {espnCreds.leagueId}</p>
-                <p className="truncate text-xs text-muted">
-                  {espnCreds.espn_s2 || espnCreds.swid ? "Private" : "Public"}
-                  {selectedEspnTeam ? ` · ${selectedEspnTeam.name}` : ""}
-                </p>
-              </div>
-              <Button variant="ghost" size="sm" onClick={onEspnOpen} className="shrink-0">
-                Edit
-              </Button>
-              <button
-                type="button"
-                aria-label="Remove ESPN league"
-                onClick={onEspnDisconnect}
-                className="flex size-11 shrink-0 items-center justify-center rounded-lg text-muted hover:bg-subtle hover:text-fg"
-              >
-                <X className="size-4" />
-              </button>
-            </div>
-            {espnTeams.length > 1 ? (
-              <label className="mt-3 block">
-                <span className="sr-only">Your ESPN team</span>
-                <select
-                  className="h-12 w-full rounded-lg bg-elevated px-3 text-base text-fg shadow-border focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  value={espnCreds.teamId || ""}
-                  onChange={(e) => onEspnTeamChange(e.target.value)}
+      <div className="mt-4 space-y-2">
+        {espnConnections.map(({ creds, teams }) => {
+          const selectedTeam = teams.find((t) => String(t.id) === creds.teamId);
+          return (
+            <div key={creds.leagueId} className="rounded-xl bg-surface p-3 shadow-border">
+              <div className="flex items-center gap-3">
+                <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-subtle text-[10px] font-semibold tracking-wide text-fg">
+                  ESPN
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-fg">League {creds.leagueId}</p>
+                  <p className="truncate text-xs text-muted">
+                    {creds.espn_s2 || creds.swid ? "Private" : "Public"}
+                    {selectedTeam ? ` · ${selectedTeam.name}` : ""}
+                  </p>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => onEspnEdit(creds.leagueId)} className="shrink-0">
+                  Edit
+                </Button>
+                <button
+                  type="button"
+                  aria-label={`Remove ESPN league ${creds.leagueId}`}
+                  onClick={() => onEspnDisconnect(creds.leagueId)}
+                  className="flex size-11 shrink-0 items-center justify-center rounded-lg text-muted hover:bg-subtle hover:text-fg"
                 >
-                  {espnTeams.map((team) => (
-                    <option key={team.id} value={String(team.id)}>
-                      {team.name} ({team.abbrev})
-                    </option>
-                  ))}
-                </select>
-              </label>
-            ) : null}
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={onEspnOpen}
-            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-surface text-sm text-fg shadow-border"
-          >
-            <Plus className="size-4" />
-            Add an ESPN league
-          </button>
-        )}
+                  <X className="size-4" />
+                </button>
+              </div>
+              {teams.length > 1 ? (
+                <label className="mt-3 block">
+                  <span className="sr-only">Your ESPN team for league {creds.leagueId}</span>
+                  <select
+                    className="h-12 w-full rounded-lg bg-elevated px-3 text-base text-fg shadow-border focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    value={creds.teamId || ""}
+                    onChange={(e) => onEspnTeamChange(creds.leagueId, e.target.value)}
+                  >
+                    {teams.map((team) => (
+                      <option key={team.id} value={String(team.id)}>
+                        {team.name} ({team.abbrev})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : null}
+            </div>
+          );
+        })}
+        <button
+          type="button"
+          onClick={onEspnOpen}
+          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-surface text-sm text-fg shadow-border"
+        >
+          <Plus className="size-4" />
+          {espnConnections.length ? "Add another ESPN league" : "Add an ESPN league"}
+        </button>
       </div>
 
       <div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-surface px-3 py-2.5 shadow-border">
@@ -584,17 +584,17 @@ function AccountRow({
 
 export function TeamSummary({
   accounts,
-  espnCreds,
+  espnConnections,
   espnLabel,
   onClick,
 }: {
   accounts: SleeperAccount[];
-  espnCreds: EspnCredentials | null;
+  espnConnections: EspnConnection[];
   espnLabel?: string;
   onClick: () => void;
 }) {
   const sleeperTeams = accounts.reduce((sum, a) => sum + (selectedCount(a) ?? 0), 0);
-  const teamCount = sleeperTeams + (espnCreds ? 1 : 0);
+  const teamCount = sleeperTeams + espnConnections.length;
   const faces = accounts.slice(0, 4);
 
   return (
@@ -609,7 +609,7 @@ export function TeamSummary({
             <SleeperAvatar name={account.displayName || account.username} avatar={account.avatar} size="sm" />
           </span>
         ))}
-        {espnCreds ? (
+        {espnConnections.length ? (
           <span className="inline-flex size-8 items-center justify-center rounded-full bg-subtle text-[10px] font-semibold tracking-wide text-fg ring-2 ring-elevated">
             ESPN
           </span>

@@ -50,7 +50,7 @@ export const runAnalysis = createServerFn({ method: "POST" })
       week: z.number().int().min(1).max(18),
       sleeperUsernames: z.string().optional(),
       sleeperAccounts: z.array(sleeperAccount).optional(),
-      espn: espnCreds.optional(),
+      espn: z.array(espnCreds).max(10).optional(),
     }),
   )
   .handler(async ({ data }) => {

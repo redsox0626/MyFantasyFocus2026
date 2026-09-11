@@ -11,11 +11,10 @@ import { DEMO_RESULT } from "@/lib/fantasy/demo";
 import { getBootstrap, getEspnTeams, runAnalysis } from "@/lib/fantasy/functions";
 import { classifySlot, findGameForTeam, kickoffLabel, teamsInSlot } from "@/lib/fantasy/schedule";
 import {
-  clearEspnCredentials,
-  loadEspnCredentials,
+  loadEspnCredentialsList,
   loadShowIdp,
   loadSleeperAccounts,
-  saveEspnCredentials,
+  saveEspnCredentialsList,
   savePlatform,
   saveShowIdp,
   saveSleeperAccounts,
@@ -23,6 +22,7 @@ import {
 import type {
   AnalysisResult,
   BootstrapData,
+  EspnConnection,
   EspnCredentials,
   EspnTeam,
   Platform,
@@ -70,10 +70,19 @@ function slotCounts(result: AnalysisResult, bootstrap: BootstrapData | null, wee
   return counts;
 }
 
-function derivePlatform(accounts: SleeperAccount[], espn: EspnCredentials | null): Platform {
+function espnPayload(connections: EspnConnection[]) {
+  return connections.map(({ creds }) => ({
+    leagueId: creds.leagueId,
+    teamId: creds.teamId,
+    espn_s2: creds.espn_s2 || undefined,
+    swid: creds.swid || undefined,
+  }));
+}
+
+function derivePlatform(accounts: SleeperAccount[], hasEspn: boolean): Platform {
   const sleeper = accounts.some((a) => !a.missing);
-  if (sleeper && espn) return "both";
-  if (espn && !sleeper) return "espn";
+  if (sleeper && hasEspn) return "both";
+  if (hasEspn && !sleeper) return "espn";
   return "sleeper";
 }
 
@@ -82,9 +91,9 @@ export function HomeScreen() {
   const [bootError, setBootError] = useState<string | null>(null);
   const [accounts, setAccounts] = useState<SleeperAccount[]>([]);
   const [week, setWeek] = useState(1);
-  const [espnCreds, setEspnCreds] = useState<EspnCredentials | null>(null);
-  const [espnTeams, setEspnTeams] = useState<EspnTeam[]>([]);
+  const [espnConnections, setEspnConnections] = useState<EspnConnection[]>([]);
   const [espnOpen, setEspnOpen] = useState(false);
+  const [editingEspnLeagueId, setEditingEspnLeagueId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [filter, setFilter] = useState<TimeFilter>("All");
@@ -95,18 +104,29 @@ export function HomeScreen() {
   useEffect(() => {
     setAccounts(loadSleeperAccounts());
     setShowIdp(loadShowIdp());
-    const stored = loadEspnCredentials();
-    if (stored) {
-      setEspnCreds(stored);
-      getEspnTeams({
-        data: {
-          leagueId: stored.leagueId,
-          espn_s2: stored.espn_s2 || undefined,
-          swid: stored.swid || undefined,
-        },
-      })
-        .then((r) => setEspnTeams(r.teams))
-        .catch(() => undefined);
+    const stored = loadEspnCredentialsList();
+    if (stored.length) {
+      setEspnConnections(stored.map((creds) => ({ creds, teams: [] })));
+      Promise.all(
+        stored.map((creds) =>
+          getEspnTeams({
+            data: {
+              leagueId: creds.leagueId,
+              espn_s2: creds.espn_s2 || undefined,
+              swid: creds.swid || undefined,
+            },
+          })
+            .then((r) => ({ leagueId: creds.leagueId, teams: r.teams }))
+            .catch(() => ({ leagueId: creds.leagueId, teams: [] as EspnTeam[] })),
+        ),
+      ).then((results) => {
+        setEspnConnections((cur) =>
+          cur.map((conn) => {
+            const match = results.find((r) => r.leagueId === conn.creds.leagueId);
+            return match ? { ...conn, teams: match.teams } : conn;
+          }),
+        );
+      });
     }
     getBootstrap()
       .then((data) => {
@@ -119,7 +139,7 @@ export function HomeScreen() {
   }, []);
 
   const season = bootstrap?.state.season || String(SEASON_YEAR);
-  const platform = derivePlatform(accounts, espnCreds);
+  const platform = derivePlatform(accounts, espnConnections.length > 0);
   const liveTeams = useMemo(() => {
     const fromResult = result?.meta.liveTeams || [];
     const fromBoot = bootstrap?.liveTeams || [];
@@ -157,9 +177,48 @@ export function HomeScreen() {
     saveShowIdp(next);
   }
 
+  async function refreshSilently() {
+    const sleeperOn = accounts.some((a) => !a.missing);
+    if (!sleeperOn && !espnConnections.length) return;
+    try {
+      const data = await runAnalysis({
+        data: {
+          platform,
+          week,
+          sleeperAccounts: accounts
+            .filter((a) => !a.missing)
+            .map((a) => ({
+              username: a.username,
+              leagueIds: a.leagueIds ?? null,
+            })),
+          espn: espnConnections.length ? espnPayload(espnConnections) : undefined,
+        },
+      });
+      setResult(data);
+    } catch {
+      // Silent — a background refresh hiccup shouldn't interrupt the user
+      // with a toast every 30s. The next tick tries again.
+    }
+  }
+
+  // Auto-refresh scores/points while the tab stays open, so live games
+  // update without needing a manual reload. Only runs once an initial
+  // analysis has been loaded, and skips ticks while the tab isn't visible
+  // to avoid pointless calls while backgrounded.
+  useEffect(() => {
+    if (!result) return;
+    const REFRESH_MS = 30_000;
+    const id = setInterval(() => {
+      if (document.hidden) return;
+      refreshSilently();
+    }, REFRESH_MS);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Boolean(result), accounts, espnConnections, week, platform]);
+
   async function handleAnalyze() {
     const sleeperOn = accounts.some((a) => !a.missing);
-    if (!sleeperOn && !espnCreds) {
+    if (!sleeperOn && !espnConnections.length) {
       toast.error("Add a Sleeper username or an ESPN league.");
       return;
     }
@@ -177,14 +236,7 @@ export function HomeScreen() {
               username: a.username,
               leagueIds: a.leagueIds ?? null,
             })),
-          espn: espnCreds
-            ? {
-                leagueId: espnCreds.leagueId,
-                teamId: espnCreds.teamId,
-                espn_s2: espnCreds.espn_s2 || undefined,
-                swid: espnCreds.swid || undefined,
-              }
-            : undefined,
+          espn: espnConnections.length ? espnPayload(espnConnections) : undefined,
         },
       });
       setResult(data);
@@ -218,16 +270,25 @@ export function HomeScreen() {
   }
 
   function handleEspnConnected(creds: EspnCredentials, teams: EspnTeam[]) {
-    setEspnCreds(creds);
-    setEspnTeams(teams);
-    saveEspnCredentials(creds);
+    setEspnConnections((cur) => {
+      const next = editingEspnLeagueId
+        ? cur.map((c) => (c.creds.leagueId === editingEspnLeagueId ? { creds, teams } : c))
+        : cur.some((c) => c.creds.leagueId === creds.leagueId)
+          ? cur.map((c) => (c.creds.leagueId === creds.leagueId ? { creds, teams } : c))
+          : [...cur, { creds, teams }];
+      saveEspnCredentialsList(next.map((c) => c.creds));
+      return next;
+    });
+    setEditingEspnLeagueId(null);
     toast.success(`Connected ESPN league ${creds.leagueId}`);
   }
 
-  function disconnectEspn() {
-    clearEspnCredentials();
-    setEspnCreds(null);
-    setEspnTeams([]);
+  function disconnectEspn(leagueId: string) {
+    setEspnConnections((cur) => {
+      const next = cur.filter((c) => c.creds.leagueId !== leagueId);
+      saveEspnCredentialsList(next.map((c) => c.creds));
+      return next;
+    });
   }
 
   const showComposer = !collapsed || !result;
@@ -275,7 +336,7 @@ export function HomeScreen() {
       {result && collapsed ? (
         <TeamSummary
           accounts={accounts}
-          espnCreds={espnCreds}
+          espnConnections={espnConnections}
           espnLabel="Tap to edit accounts"
           onClick={() => setCollapsed(false)}
         />
@@ -286,14 +347,21 @@ export function HomeScreen() {
           season={season}
           accounts={accounts}
           onAccountsChange={persistAccounts}
-          espnCreds={espnCreds}
-          espnTeams={espnTeams}
-          onEspnOpen={() => setEspnOpen(true)}
-          onEspnTeamChange={(teamId) => {
-            if (!espnCreds) return;
-            const next = { ...espnCreds, teamId };
-            setEspnCreds(next);
-            saveEspnCredentials(next);
+          espnConnections={espnConnections}
+          onEspnOpen={() => {
+            setEditingEspnLeagueId(null);
+            setEspnOpen(true);
+          }}
+          onEspnEdit={(leagueId) => {
+            setEditingEspnLeagueId(leagueId);
+            setEspnOpen(true);
+          }}
+          onEspnTeamChange={(leagueId, teamId) => {
+            setEspnConnections((cur) => {
+              const next = cur.map((c) => (c.creds.leagueId === leagueId ? { ...c, creds: { ...c.creds, teamId } } : c));
+              saveEspnCredentialsList(next.map((c) => c.creds));
+              return next;
+            });
           }}
           onEspnDisconnect={disconnectEspn}
           showIdp={showIdp}
@@ -369,7 +437,15 @@ export function HomeScreen() {
         </nav>
       ) : null}
 
-      <EspnDialog open={espnOpen} onOpenChange={setEspnOpen} onConnected={handleEspnConnected} initial={espnCreds} />
+      <EspnDialog
+        open={espnOpen}
+        onOpenChange={(open) => {
+          setEspnOpen(open);
+          if (!open) setEditingEspnLeagueId(null);
+        }}
+        onConnected={handleEspnConnected}
+        initial={espnConnections.find((c) => c.creds.leagueId === editingEspnLeagueId)?.creds || null}
+      />
     </div>
   );
 }

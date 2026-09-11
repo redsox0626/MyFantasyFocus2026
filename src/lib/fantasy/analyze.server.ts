@@ -204,7 +204,7 @@ export async function analyzeLineups(input: {
   week: number;
   sleeperUsernames?: string;
   sleeperAccounts?: { username: string; leagueIds?: string[] | null }[];
-  espn?: { leagueId: string; teamId?: string; espn_s2?: string; swid?: string };
+  espn?: { leagueId: string; teamId?: string; espn_s2?: string; swid?: string }[];
 }): Promise<AnalysisResult> {
   const state = await getNflState();
   const week = Math.max(1, Math.min(18, Number(input.week) || state.week || 1));
@@ -305,76 +305,84 @@ export async function analyzeLineups(input: {
   }
 
   if (wantEspn) {
-    if (!input.espn?.leagueId) {
+    const leagues = input.espn || [];
+    if (!leagues.length) {
       if (input.platform === "espn") throw new Error("Connect an ESPN league first.");
     } else {
+      let dict: Record<string, any> | null = null;
       try {
-        const espn = await analyzeEspnMatchup({
-          leagueId: input.espn.leagueId,
-          teamId: input.espn.teamId,
-          week,
-          espn_s2: input.espn.espn_s2,
-          swid: input.espn.swid,
-          year: Number(season),
-        });
-        espnUsed = true;
-        usedSeason = espn.year;
-        fallback = espn.fallback;
-        if (espn.fallback) {
-          warnings.push(`ESPN had no ${season} data yet — showing ${espn.year} instead.`);
-        }
-        matchups.push({
-          ...espn.matchup,
-          platform: "espn",
-          status: statusFromScores(espn.matchup.myTeam.score, espn.matchup.oppTeam?.score ?? null),
-        });
-        let dict: Record<string, any> | null = null;
+        dict = await getSleeperPlayers();
+      } catch {
+        dict = null;
+      }
+      for (const league of leagues) {
+        if (!league?.leagueId) continue;
         try {
-          dict = await getSleeperPlayers();
-        } catch {
-          dict = null;
-        }
-        const addEspn = (
-          starters: typeof espn.user.starters,
-          target: Map<string, StartAcc>,
-          counts: Map<string, number>,
-          side: "mine" | "theirs",
-        ) => {
-          for (const s of starters) {
-            const sleeperId = dict ? findSleeperIdByName(s.name, s.position, dict) : null;
-            const id = sleeperId || `espn-${s.id}`;
-            mergeStart(
-              target,
-              {
-                ...emptyAcc({
-                  id,
-                  name: s.name,
-                  playerNameOnly: s.shortName,
-                  position: s.position,
-                  nflTeam: normalizeNflTeam(s.nflTeam),
-                }),
-                tags: [
-                  {
-                    abbrev: s.fantasyAbbrev,
-                    name: s.fantasyTeamName,
-                    side,
-                    platform: "espn",
-                    matchupId: espn.matchup.id,
-                  },
-                ],
-                platform: new Set(["espn"]),
-              },
-              counts,
-            );
+          const espn = await analyzeEspnMatchup({
+            leagueId: league.leagueId,
+            teamId: league.teamId,
+            week,
+            espn_s2: league.espn_s2,
+            swid: league.swid,
+            year: Number(season),
+          });
+          espnUsed = true;
+          usedSeason = espn.year;
+          fallback = fallback || espn.fallback;
+          if (espn.fallback) {
+            warnings.push(`ESPN league ${league.leagueId} had no ${season} data yet — showing ${espn.year} instead.`);
           }
-        };
-        addEspn(espn.user.starters, myMap, myCounts, "mine");
-        if (espn.opponent) addEspn(espn.opponent.starters, oppMap, oppCounts, "theirs");
-        else warnings.push("No ESPN opponent found for this week (bye or unmatched).");
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : "ESPN analysis failed.";
-        if (input.platform === "espn") throw err;
-        warnings.push(msg);
+          // Scope the matchup id by league so two ESPN leagues never collide
+          // on the same raw ESPN matchup number.
+          const matchupId = `espn-${league.leagueId}-${espn.matchup.id}`;
+          matchups.push({
+            ...espn.matchup,
+            id: matchupId,
+            platform: "espn",
+            status: statusFromScores(espn.matchup.myTeam.score, espn.matchup.oppTeam?.score ?? null),
+          });
+          const addEspn = (
+            starters: typeof espn.user.starters,
+            target: Map<string, StartAcc>,
+            counts: Map<string, number>,
+            side: "mine" | "theirs",
+          ) => {
+            for (const s of starters) {
+              const sleeperId = dict ? findSleeperIdByName(s.name, s.position, dict) : null;
+              const id = sleeperId || `espn-${league.leagueId}-${s.id}`;
+              mergeStart(
+                target,
+                {
+                  ...emptyAcc({
+                    id,
+                    name: s.name,
+                    playerNameOnly: s.shortName,
+                    position: s.position,
+                    nflTeam: normalizeNflTeam(s.nflTeam),
+                  }),
+                  tags: [
+                    {
+                      abbrev: s.fantasyAbbrev,
+                      name: s.fantasyTeamName,
+                      side,
+                      platform: "espn",
+                      matchupId,
+                    },
+                  ],
+                  platform: new Set(["espn"]),
+                },
+                counts,
+              );
+            }
+          };
+          addEspn(espn.user.starters, myMap, myCounts, "mine");
+          if (espn.opponent) addEspn(espn.opponent.starters, oppMap, oppCounts, "theirs");
+          else warnings.push(`No ESPN opponent found for league ${league.leagueId} this week (bye or unmatched).`);
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : `ESPN league ${league.leagueId} analysis failed.`;
+          if (input.platform === "espn" && leagues.length === 1) throw err;
+          warnings.push(msg);
+        }
       }
     }
   }
