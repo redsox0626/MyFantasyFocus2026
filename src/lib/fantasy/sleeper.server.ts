@@ -1,4 +1,4 @@
-import { SEASON_YEAR, formatPlayerName, normalizeNflTeam } from "./constants";
+import { SEASON_YEAR, defenseName, formatPlayerName, normalizeNflTeam } from "./constants";
 import { abbreviateTeamName, nameKey, normalizePersonName } from "./names";
 import type { NflState, SleeperUserLookup } from "./types";
 
@@ -122,20 +122,26 @@ export function sleeperPlayerInfo(id: string, dict: Record<string, SleeperPlayer
     if (!asTeam) {
       return { short: `Player ${id}`, full: `Player ${id}`, position: "UNKNOWN", nflTeam: "FA" };
     }
-    const { full, short } = formatPlayerName(asTeam.first_name || "", asTeam.last_name || asTeam.full_name || id);
+    const nflTeam = normalizeNflTeam(asTeam.team || id);
+    const { full, short } =
+      asTeam.position === "DEF"
+        ? defenseName(nflTeam)
+        : formatPlayerName(asTeam.first_name || "", asTeam.last_name || asTeam.full_name || id);
     return {
       short,
       full,
       position: asTeam.position || "DEF",
-      nflTeam: normalizeNflTeam(asTeam.team || id),
+      nflTeam,
     };
   }
-  const { full, short } = formatPlayerName(p.first_name || "", p.last_name || p.full_name || "");
+  const nflTeam = normalizeNflTeam(p.team);
+  const { full, short } =
+    p.position === "DEF" ? defenseName(nflTeam) : formatPlayerName(p.first_name || "", p.last_name || p.full_name || "");
   return {
     short,
     full,
     position: p.position || "UNKNOWN",
-    nflTeam: normalizeNflTeam(p.team),
+    nflTeam,
   };
 }
 

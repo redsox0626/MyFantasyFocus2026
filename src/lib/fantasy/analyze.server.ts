@@ -1,5 +1,5 @@
 import bundledSchedule from "../../data/nfl_2026_schedule.json";
-import { SEASON_YEAR, normalizeNflTeam } from "./constants";
+import { SEASON_YEAR, defenseName, normalizeNflTeam } from "./constants";
 import { analyzeEspnMatchup, loadEspnLeague } from "./espn.server";
 import { applyLiveStatus, fetchLiveSnapshot, liveTeamsFromSchedule } from "./live.server";
 import { identityKey } from "./names";
@@ -265,12 +265,13 @@ export async function analyzeLineups(input: {
       }
       for (const s of collected.myStarts) {
         const info = sleeperPlayerInfo(s.playerId, dict);
+        const id = info.position === "DEF" ? info.nflTeam : s.playerId;
         addProjected(s.matchupId, "my", s.playerId);
         mergeStart(
           myMap,
           {
             ...emptyAcc({
-              id: s.playerId,
+              id,
               name: info.full,
               playerNameOnly: info.short,
               position: info.position,
@@ -292,12 +293,13 @@ export async function analyzeLineups(input: {
       }
       for (const s of collected.oppStarts) {
         const info = sleeperPlayerInfo(s.playerId, dict);
+        const id = info.position === "DEF" ? info.nflTeam : s.playerId;
         addProjected(s.matchupId, "opp", s.playerId);
         mergeStart(
           oppMap,
           {
             ...emptyAcc({
-              id: s.playerId,
+              id,
               name: info.full,
               playerNameOnly: info.short,
               position: info.position,
@@ -364,16 +366,28 @@ export async function analyzeLineups(input: {
             side: "mine" | "theirs",
           ) => {
             for (const s of starters) {
-              const sleeperId = dict ? findSleeperIdByName(s.name, s.position, dict) : null;
+              const isDefense = s.position === "DEF";
+              // Sleeper keys team defenses by their team abbreviation itself
+              // (e.g. "JAX"), so for DEF we can resolve the id directly and
+              // skip fuzzy name matching entirely — that's what let the same
+              // defense show up as two unmerged entries across platforms.
+              const sleeperId = isDefense
+                ? normalizeNflTeam(s.nflTeam)
+                : dict
+                  ? findSleeperIdByName(s.name, s.position, dict)
+                  : null;
               const id = sleeperId || `espn-${league.leagueId}-${s.id}`;
               if (sleeperId) addProjected(matchupId, side === "mine" ? "my" : "opp", sleeperId);
+              const { name, shortName } = isDefense
+                ? { name: defenseName(s.nflTeam).full, shortName: defenseName(s.nflTeam).short }
+                : { name: s.name, shortName: s.shortName };
               mergeStart(
                 target,
                 {
                   ...emptyAcc({
                     id,
-                    name: s.name,
-                    playerNameOnly: s.shortName,
+                    name,
+                    playerNameOnly: shortName,
                     position: s.position,
                     nflTeam: normalizeNflTeam(s.nflTeam),
                   }),

@@ -159,6 +159,17 @@ export function formatPlayerName(first: string, last: string): { full: string; s
   return { full: `${f} ${l}`.trim() || "Unknown", short };
 }
 
+// Sleeper and ESPN each format team defenses differently (e.g. "Jacksonville
+// Jaguars" vs "Jacksonville D/ST"), which used to make the same real-world
+// defense show up as two different-looking, unmatched entries. Since a
+// defense's identity is really just its NFL team, derive one consistent
+// label from the team abbreviation instead of trusting either platform's
+// raw name fields.
+export function defenseName(nflTeam: string): { full: string; short: string } {
+  const label = `${normalizeNflTeam(nflTeam)} D/ST`;
+  return { full: label, short: label };
+}
+
 export function sleeperAvatarUrl(avatar?: string | null, size: "thumb" | "full" = "thumb"): string | null {
   if (!avatar) return null;
   if (avatar.startsWith("http://") || avatar.startsWith("https://")) return avatar;
