@@ -66,6 +66,8 @@ export interface Player {
   tags?: FantasyTeamTag[];
   stdPts?: number;
   pprPts?: number;
+  qb4ptPts?: number;
+  qb6ptPts?: number;
 }
 
 export interface EspnCredentials {

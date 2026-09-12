@@ -11,7 +11,7 @@ const SLEEPER = "https://api.sleeper.app/v1";
 const SLEEPER_STATS = "https://api.sleeper.app/stats/nfl";
 const SLEEPER_PROJECTIONS = "https://api.sleeper.app/projections/nfl";
 
-export type PlayerPoints = { std: number; ppr: number };
+export type PlayerPoints = { std: number; ppr: number; passTd: number };
 
 let statsCache: { key: string; at: number; map: Map<string, PlayerPoints> } | null = null;
 const STATS_TTL_MS = 1000 * 60; // scores move during live games; keep this short
@@ -27,12 +27,16 @@ async function fetchWeekPoints(base: string, season: string, week: number): Prom
       `&position[]=QB&position[]=RB&position[]=WR&position[]=TE&position[]=K&position[]=DEF`;
     const res = await fetch(url, { headers: { Accept: "application/json" } });
     if (res.ok) {
-      const rows = (await res.json()) as { player_id?: string; stats?: { pts_std?: number; pts_ppr?: number } }[];
+      const rows = (await res.json()) as {
+        player_id?: string;
+        stats?: { pts_std?: number; pts_ppr?: number; pass_td?: number };
+      }[];
       for (const row of rows) {
         if (!row.player_id) continue;
         map.set(row.player_id, {
           std: row.stats?.pts_std ?? 0,
           ppr: row.stats?.pts_ppr ?? 0,
+          passTd: row.stats?.pass_td ?? 0,
         });
       }
     }

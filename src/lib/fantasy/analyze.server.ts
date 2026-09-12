@@ -106,6 +106,8 @@ function toPlayers(
       tags: acc.tags,
       stdPts: pts?.std,
       pprPts: pts?.ppr,
+      qb4ptPts: pts?.std,
+      qb6ptPts: pts ? pts.std + 2 * pts.passTd : undefined,
     });
   }
   return list;
