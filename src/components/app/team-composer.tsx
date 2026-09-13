@@ -11,7 +11,7 @@ import {
   loadSleeperRecents,
   pushSleeperRecents,
 } from "@/lib/fantasy/storage";
-import type { EspnConnection, SleeperAccount, SleeperRecent, SleeperUserLookup } from "@/lib/fantasy/types";
+import type { EspnConnection, EspnRecent, SleeperAccount, SleeperRecent, SleeperUserLookup } from "@/lib/fantasy/types";
 import { cn } from "@/lib/utils";
 
 function useDebounced<T>(value: T, ms: number): T {
@@ -51,6 +51,9 @@ export function TeamComposer({
   onEspnEdit,
   onEspnTeamChange,
   onEspnDisconnect,
+  espnRecents,
+  onEspnRecentClick,
+  connectingEspnLeagueId,
   showIdp,
   onShowIdp,
   loading,
@@ -67,6 +70,9 @@ export function TeamComposer({
   onEspnEdit: (leagueId: string) => void;
   onEspnTeamChange: (leagueId: string, teamId: string) => void;
   onEspnDisconnect: (leagueId: string) => void;
+  espnRecents: EspnRecent[];
+  onEspnRecentClick: (recent: EspnRecent) => void;
+  connectingEspnLeagueId: string | null;
   showIdp: boolean;
   onShowIdp: (next: boolean) => void;
   loading: boolean;
@@ -401,6 +407,33 @@ export function TeamComposer({
           <Plus className="size-4" />
           {espnConnections.length ? "Add another ESPN league" : "Add an ESPN league"}
         </button>
+        {espnRecents.length > 0 ? (
+          <div>
+            <p className="mb-1.5 text-[11px] font-medium uppercase tracking-[0.14em] text-muted">Recent leagues</p>
+            <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {espnRecents.map((recent) => {
+                const connecting = connectingEspnLeagueId === recent.leagueId;
+                return (
+                  <button
+                    key={recent.leagueId}
+                    type="button"
+                    disabled={connecting}
+                    onClick={() => onEspnRecentClick(recent)}
+                    className="flex h-11 shrink-0 items-center gap-2 rounded-full bg-surface py-1 pl-1 pr-3 shadow-border disabled:opacity-60"
+                  >
+                    <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-subtle text-[9px] font-semibold tracking-wide text-fg">
+                      ESPN
+                    </span>
+                    <span className="text-sm text-fg">
+                      {connecting ? "Connecting…" : recent.teamName || `League ${recent.leagueId}`}
+                    </span>
+                    {connecting ? <LoaderCircle className="size-3.5 animate-spin text-muted" /> : null}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-surface px-3 py-2.5 shadow-border">

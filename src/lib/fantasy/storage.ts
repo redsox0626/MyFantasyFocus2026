@@ -1,10 +1,11 @@
 import { parseSleeperHandles } from "./parse";
-import type { EspnCredentials, Platform, SleeperAccount, SleeperRecent } from "./types";
+import type { EspnCredentials, EspnRecent, Platform, SleeperAccount, SleeperRecent } from "./types";
 
 const ESPN_KEY = "mff.espn.credentials";
 const SLEEPER_KEY = "mff.sleeper.usernames";
 const ACCOUNTS_KEY = "mff.sleeper.accounts";
 const RECENTS_KEY = "mff.sleeper.recents";
+const ESPN_RECENTS_KEY = "mff.espn.recents";
 const PLATFORM_KEY = "mff.platform";
 const IDP_KEY = "mff.showIdp";
 
@@ -101,6 +102,34 @@ export function pushSleeperRecents(accounts: SleeperAccount[]): SleeperRecent[] 
     if (merged.length >= 8) break;
   }
   localStorage.setItem(RECENTS_KEY, JSON.stringify(merged));
+  return merged;
+}
+
+export function loadEspnRecents(): EspnRecent[] {
+  try {
+    const raw = localStorage.getItem(ESPN_RECENTS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as EspnRecent[];
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((r) => r && typeof r.leagueId === "string").slice(0, 8);
+  } catch {
+    return [];
+  }
+}
+
+// Called every time a league is successfully connected — kept indefinitely
+// (not tied to the currently-connected list) so a league you've used before
+// stays one click away even after you remove it.
+export function pushEspnRecent(recent: EspnRecent): EspnRecent[] {
+  const seen = new Set<string>();
+  const merged: EspnRecent[] = [];
+  for (const row of [recent, ...loadEspnRecents()]) {
+    if (seen.has(row.leagueId)) continue;
+    seen.add(row.leagueId);
+    merged.push(row);
+    if (merged.length >= 8) break;
+  }
+  localStorage.setItem(ESPN_RECENTS_KEY, JSON.stringify(merged));
   return merged;
 }
 

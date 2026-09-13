@@ -156,3 +156,11 @@ export interface SleeperRecent {
   displayName?: string;
   avatar?: string | null;
 }
+
+export interface EspnRecent {
+  leagueId: string;
+  teamId?: string;
+  teamName?: string;
+  espn_s2?: string;
+  swid?: string;
+}

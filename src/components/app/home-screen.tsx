@@ -12,8 +12,10 @@ import { getBootstrap, getEspnTeams, runAnalysis } from "@/lib/fantasy/functions
 import { classifySlot, findGameForTeam, kickoffLabel, teamsInSlot } from "@/lib/fantasy/schedule";
 import {
   loadEspnCredentialsList,
+  loadEspnRecents,
   loadShowIdp,
   loadSleeperAccounts,
+  pushEspnRecent,
   saveEspnCredentialsList,
   savePlatform,
   saveShowIdp,
@@ -24,6 +26,7 @@ import type {
   BootstrapData,
   EspnConnection,
   EspnCredentials,
+  EspnRecent,
   EspnTeam,
   Platform,
   Player,
@@ -92,6 +95,8 @@ export function HomeScreen() {
   const [accounts, setAccounts] = useState<SleeperAccount[]>([]);
   const [week, setWeek] = useState(1);
   const [espnConnections, setEspnConnections] = useState<EspnConnection[]>([]);
+  const [espnRecents, setEspnRecents] = useState<EspnRecent[]>([]);
+  const [connectingRecentId, setConnectingRecentId] = useState<string | null>(null);
   const [espnOpen, setEspnOpen] = useState(false);
   const [editingEspnLeagueId, setEditingEspnLeagueId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -104,6 +109,7 @@ export function HomeScreen() {
   useEffect(() => {
     setAccounts(loadSleeperAccounts());
     setShowIdp(loadShowIdp());
+    setEspnRecents(loadEspnRecents());
     const stored = loadEspnCredentialsList();
     if (stored.length) {
       setEspnConnections(stored.map((creds) => ({ creds, teams: [] })));
@@ -290,7 +296,39 @@ export function HomeScreen() {
       return next;
     });
     setEditingEspnLeagueId(null);
+    setEspnRecents(
+      pushEspnRecent({
+        leagueId: creds.leagueId,
+        teamId: creds.teamId,
+        teamName: teams.find((t) => String(t.id) === creds.teamId)?.name,
+        espn_s2: creds.espn_s2 || undefined,
+        swid: creds.swid || undefined,
+      }),
+    );
     toast.success(`Connected ESPN league ${creds.leagueId}`);
+  }
+
+  async function handleEspnRecentClick(recent: EspnRecent) {
+    if (espnConnections.some((c) => c.creds.leagueId === recent.leagueId)) return;
+    setConnectingRecentId(recent.leagueId);
+    try {
+      const result = await getEspnTeams({
+        data: { leagueId: recent.leagueId, espn_s2: recent.espn_s2, swid: recent.swid },
+      });
+      const teamId = result.teams.some((t) => String(t.id) === recent.teamId)
+        ? recent.teamId
+        : result.teams[0]
+          ? String(result.teams[0].id)
+          : undefined;
+      handleEspnConnected(
+        { leagueId: recent.leagueId, espn_s2: recent.espn_s2 || "", swid: recent.swid || "", teamId },
+        result.teams,
+      );
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : `Could not reconnect league ${recent.leagueId}.`);
+    } finally {
+      setConnectingRecentId(null);
+    }
   }
 
   function disconnectEspn(leagueId: string) {
@@ -374,6 +412,9 @@ export function HomeScreen() {
             });
           }}
           onEspnDisconnect={disconnectEspn}
+          espnRecents={espnRecents.filter((r) => !espnConnections.some((c) => c.creds.leagueId === r.leagueId))}
+          onEspnRecentClick={handleEspnRecentClick}
+          connectingEspnLeagueId={connectingRecentId}
           showIdp={showIdp}
           onShowIdp={persistIdp}
           loading={loading}
