@@ -11,7 +11,7 @@ const SLEEPER = "https://api.sleeper.app/v1";
 const SLEEPER_STATS = "https://api.sleeper.app/stats/nfl";
 const SLEEPER_PROJECTIONS = "https://api.sleeper.app/projections/nfl";
 
-export type PlayerPoints = { std: number; ppr: number; passTd: number };
+export type PlayerPoints = { std: number; ppr: number; passTd: number; raw: Record<string, number> };
 
 let statsCache: { key: string; at: number; map: Map<string, PlayerPoints> } | null = null;
 const STATS_TTL_MS = 1000 * 60; // scores move during live games; keep this short
@@ -29,7 +29,7 @@ async function fetchWeekPoints(base: string, season: string, week: number): Prom
     if (res.ok) {
       const rows = (await res.json()) as {
         player_id?: string;
-        stats?: { pts_std?: number; pts_ppr?: number; pass_td?: number };
+        stats?: Record<string, number> & { pts_std?: number; pts_ppr?: number; pass_td?: number };
       }[];
       for (const row of rows) {
         if (!row.player_id) continue;
@@ -37,6 +37,7 @@ async function fetchWeekPoints(base: string, season: string, week: number): Prom
           std: row.stats?.pts_std ?? 0,
           ppr: row.stats?.pts_ppr ?? 0,
           passTd: row.stats?.pass_td ?? 0,
+          raw: row.stats || {},
         });
       }
     }
@@ -64,6 +65,40 @@ export async function getWeekPlayerProjections(season: string, week: number): Pr
   const map = await fetchWeekPoints(SLEEPER_PROJECTIONS, season, week);
   projCache = { key, at: Date.now(), map };
   return map;
+}
+
+const scoringCache = new Map<string, { at: number; settings: Record<string, number> }>();
+const SCORING_TTL_MS = 1000 * 60 * 60; // a league's scoring rules essentially never change mid-week
+
+// Unlike the stats/projections endpoints above, this is Sleeper's official,
+// documented league endpoint — scoring_settings is a flat map of stat
+// abbreviation (e.g. "rec", "pass_td", "rec_yd") to that league's actual
+// point value for it.
+export async function getLeagueScoringSettings(leagueId: string): Promise<Record<string, number>> {
+  const cached = scoringCache.get(leagueId);
+  if (cached && Date.now() - cached.at < SCORING_TTL_MS) return cached.settings;
+  let settings: Record<string, number> = {};
+  try {
+    const league = await sleeperGet<{ scoring_settings?: Record<string, number> }>(`/league/${leagueId}`);
+    settings = league?.scoring_settings || {};
+  } catch {
+    // Best-effort — callers fall back to a generic PPR estimate when this is empty.
+  }
+  scoringCache.set(leagueId, { at: Date.now(), settings });
+  return settings;
+}
+
+// Dot-product a player's raw per-category stat line against a league's
+// actual per-category scoring weights, so the total reflects exactly what
+// that league rewards (custom bonuses, non-standard TD values, etc.)
+// instead of a generic std/PPR approximation.
+export function scoreFromSettings(raw: Record<string, number>, settings: Record<string, number>): number {
+  let total = 0;
+  for (const [key, weight] of Object.entries(settings)) {
+    const value = raw[key];
+    if (typeof value === "number" && typeof weight === "number") total += value * weight;
+  }
+  return total;
 }
 
 type SleeperPlayer = {
