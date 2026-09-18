@@ -4,7 +4,7 @@ import { normalizeNflTeam, POSITION_LABEL, POSITION_ORDER } from "@/lib/fantasy/
 import type { MatchupScore, Player } from "@/lib/fantasy/types";
 import { cn } from "@/lib/utils";
 
-function groupByPosition(players: Player[]) {
+export function groupByPosition(players: Player[]) {
   const known = new Set<string>(POSITION_ORDER);
   const groups = POSITION_ORDER.map((pos) => ({
     pos,
