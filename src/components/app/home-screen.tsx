@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Cast, LayoutGrid, Trophy } from "lucide-react";
+import { LayoutGrid, Trophy } from "lucide-react";
 import { toast } from "sonner";
-import { CastBoard } from "@/components/app/cast-board";
 import { EspnDialog } from "@/components/app/espn-dialog";
 import { LineupBoard } from "@/components/app/lineup-board";
 import { TeamComposer, TeamSummary } from "@/components/app/team-composer";
@@ -106,7 +105,6 @@ export function HomeScreen() {
   const [collapsed, setCollapsed] = useState(false);
   const [showIdp, setShowIdp] = useState(true);
   const [view, setView] = useState<"lineups" | "scores">("lineups");
-  const [castMode, setCastMode] = useState(false);
 
   useEffect(() => {
     setAccounts(loadSleeperAccounts());
@@ -172,18 +170,6 @@ export function HomeScreen() {
       opponent: applyPlayerFilters(result.opponent, opts),
     };
   }, [result, filter, bootstrap, liveTeams, showIdp]);
-
-  // Cast mode always shows the full slate — the whole point is one
-  // comprehensive board, not whatever narrow window happens to be selected.
-  const castPlayers = useMemo(() => {
-    if (!result) return null;
-    const opts = { filter: "All" as TimeFilter, teams: new Set<string>(), liveTeams, showIdp };
-    return {
-      my: applyPlayerFilters(result.my, opts),
-      overlap: applyPlayerFilters(result.overlap, opts),
-      opponent: applyPlayerFilters(result.opponent, opts),
-    };
-  }, [result, liveTeams, showIdp]);
 
   const counts = result ? slotCounts(result, bootstrap, result.meta.week, showIdp) : undefined;
   const availableSlots = useMemo(() => {
@@ -441,20 +427,9 @@ export function HomeScreen() {
 
       {result ? (
         <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <div className="hidden grid-cols-2 gap-1 rounded-xl bg-elevated p-1 shadow-border sm:grid sm:flex-1">
-              <ViewTab active={view === "lineups"} onClick={() => setView("lineups")} icon="lineups" label="Lineups" />
-              <ViewTab active={view === "scores"} onClick={() => setView("scores")} icon="scores" label="Scores" />
-            </div>
-            <button
-              type="button"
-              onClick={() => setCastMode(true)}
-              title="Cast to TV"
-              className="flex h-11 shrink-0 items-center gap-2 rounded-xl bg-elevated px-3 text-sm font-medium text-fg shadow-border sm:px-4"
-            >
-              <Cast className="size-4" />
-              <span className="hidden sm:inline">Cast to TV</span>
-            </button>
+          <div className="hidden grid-cols-2 gap-1 rounded-xl bg-elevated p-1 shadow-border sm:grid">
+            <ViewTab active={view === "lineups"} onClick={() => setView("lineups")} icon="lineups" label="Lineups" />
+            <ViewTab active={view === "scores"} onClick={() => setView("scores")} icon="scores" label="Scores" />
           </div>
 
           {view === "lineups" ? (
@@ -529,17 +504,6 @@ export function HomeScreen() {
         onConnected={handleEspnConnected}
         initial={espnConnections.find((c) => c.creds.leagueId === editingEspnLeagueId)?.creds || null}
       />
-
-      {castMode && result && castPlayers ? (
-        <CastBoard
-          my={castPlayers.my}
-          overlap={castPlayers.overlap}
-          opponent={castPlayers.opponent}
-          matchups={result.matchups}
-          redZoneTeams={redZoneTeams}
-          onExit={() => setCastMode(false)}
-        />
-      ) : null}
     </div>
   );
 }
