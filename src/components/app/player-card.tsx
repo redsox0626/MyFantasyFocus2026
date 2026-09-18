@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils";
 // Receptions don't factor into these positions' scoring, so a separate PPR
 // figure is redundant — QBs rarely catch passes, and DEF/DL/LB/DB are
 // scored on tackles/turnovers, not receptions.
-const NO_PPR_POSITIONS = new Set(["QB", "DEF", "DL", "LB", "DB"]);
+export const NO_PPR_POSITIONS = new Set(["QB", "DEF", "DL", "LB", "DB"]);
 
-function overlapTone(player: Player): "mine" | "theirs" | "shared" {
+export function overlapTone(player: Player): "mine" | "theirs" | "shared" {
   const my = player.myCount || 0;
   const opp = player.oppCount || 0;
   if (my > opp) return "mine";
