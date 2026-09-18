@@ -22,9 +22,13 @@ const PROJ_TTL_MS = 1000 * 60 * 15; // projections barely move once the week is 
 async function fetchWeekPoints(base: string, season: string, week: number): Promise<Map<string, PlayerPoints>> {
   const map = new Map<string, PlayerPoints>();
   try {
-    const url =
-      `${base}/${season}/${week}?season_type=regular` +
-      `&position[]=QB&position[]=RB&position[]=WR&position[]=TE&position[]=K&position[]=DEF`;
+    // Deliberately no position[] filter: that param narrows which players
+    // come back, but the risk that it (or some other quirk of this
+    // undocumented endpoint) also trims which raw stat categories are
+    // included per player is exactly what would make scoreFromSettings
+    // silently undercount — it just treats a missing category as 0. The
+    // unfiltered payload is a few hundred KB; caching already covers the cost.
+    const url = `${base}/${season}/${week}?season_type=regular`;
     const res = await fetch(url, { headers: { Accept: "application/json" } });
     if (res.ok) {
       const rows = (await res.json()) as {
@@ -210,6 +214,16 @@ function matchupPoints(matchup: any): number {
   return Number.isFinite(n) ? n : 0;
 }
 
+// Not in Sleeper's documented matchup schema (which only lists points and
+// custom_points), but some third-party integrations report a
+// points_projected field showing up in practice. Reading it here is free —
+// we already fetch this matchup row — and callers fall back to their own
+// computed projection when it's absent, so this is a safe, no-cost check.
+function matchupProjected(matchup: any): number | undefined {
+  const n = Number(matchup?.points_projected);
+  return Number.isFinite(n) ? n : undefined;
+}
+
 export type SleeperStart = {
   playerId: string;
   fantasyAbbrev: string;
@@ -220,8 +234,8 @@ export type SleeperStart = {
 export type SleeperMatchupRow = {
   id: string;
   leagueName: string;
-  myTeam: { name: string; abbrev: string; score: number };
-  oppTeam: { name: string; abbrev: string; score: number } | null;
+  myTeam: { name: string; abbrev: string; score: number; projected?: number };
+  oppTeam: { name: string; abbrev: string; score: number; projected?: number } | null;
 };
 
 export type SleeperAccountQuery = {
@@ -336,9 +350,19 @@ export async function collectSleeperStarts(accounts: SleeperAccountQuery[], week
       matchups.push({
         id: row.matchupId,
         leagueName: row.leagueName,
-        myTeam: { name: row.myName, abbrev: row.myAbbrev, score: matchupPoints(row.userMatchup) },
+        myTeam: {
+          name: row.myName,
+          abbrev: row.myAbbrev,
+          score: matchupPoints(row.userMatchup),
+          projected: matchupProjected(row.userMatchup),
+        },
         oppTeam: row.oppMatchup
-          ? { name: row.oppName, abbrev: row.oppAbbrev, score: matchupPoints(row.oppMatchup) }
+          ? {
+              name: row.oppName,
+              abbrev: row.oppAbbrev,
+              score: matchupPoints(row.oppMatchup),
+              projected: matchupProjected(row.oppMatchup),
+            }
           : null,
       });
       for (const pid of row.userMatchup?.starters || []) {

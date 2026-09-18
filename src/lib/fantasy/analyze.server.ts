@@ -236,6 +236,17 @@ export async function analyzeLineups(input: {
   // fall back to the PPR estimate since we don't have a scoring-settings
   // fetch for ESPN wired up yet.
   const scoringByLeague = new Map<string, Record<string, number>>();
+  // Sleeper's own pts_std/pts_ppr are guaranteed correct (they're what
+  // Sleeper itself computed), so interpolating between them using this
+  // league's real reception value gives a trustworthy sanity floor — the
+  // custom dot-product can go higher (real bonuses), but should never come
+  // in lower than this without something being missed.
+  function interpolatedBaseline(entry: PlayerPoints, settings: Record<string, number>): number {
+    const recWeight = settings.rec;
+    if (typeof recWeight !== "number") return entry.std;
+    const clamped = Math.max(0, Math.min(1, recWeight));
+    return entry.std + clamped * (entry.ppr - entry.std);
+  }
   function addProjected(matchupId: string, side: "my" | "opp", playerId: string, nflTeam: string) {
     // Once a player's game has actually kicked off, their real (live or
     // final) points are a far better "projection" than a frozen pre-game
@@ -246,8 +257,10 @@ export async function analyzeLineups(input: {
     const entry = (started ? points.get(playerId) : projections.get(playerId)) || projections.get(playerId) || points.get(playerId);
     if (!entry) return;
     const settings = matchupId.startsWith("sleeper:") ? scoringByLeague.get(matchupId.split(":")[1]) : null;
-    const contribution =
-      settings && Object.keys(settings).length ? scoreFromSettings(entry.raw, settings) : entry.ppr;
+    let contribution = entry.ppr;
+    if (settings && Object.keys(settings).length) {
+      contribution = Math.max(scoreFromSettings(entry.raw, settings), interpolatedBaseline(entry, settings));
+    }
     const cur = projTotals.get(matchupId) || { my: 0, opp: 0 };
     cur[side] += contribution;
     projTotals.set(matchupId, cur);
@@ -445,8 +458,11 @@ export async function analyzeLineups(input: {
   for (const m of matchups) {
     const t = projTotals.get(m.id);
     if (!t) continue;
-    m.myTeam.projected = Math.round(t.my * 10) / 10;
-    if (m.oppTeam) m.oppTeam.projected = Math.round(t.opp * 10) / 10;
+    // If Sleeper's own matchup row already carried a points_projected value
+    // (see matchupProjected in sleeper.server.ts), that's their real,
+    // live-updating number — never overwrite it with our own estimate.
+    if (m.myTeam.projected == null) m.myTeam.projected = Math.round(t.my * 10) / 10;
+    if (m.oppTeam && m.oppTeam.projected == null) m.oppTeam.projected = Math.round(t.opp * 10) / 10;
   }
 
   alignMaps(myMap, oppMap, myCounts, oppCounts);

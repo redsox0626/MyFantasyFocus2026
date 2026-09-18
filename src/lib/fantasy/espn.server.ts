@@ -26,8 +26,8 @@ export type EspnStarter = {
 export type EspnMatchupRow = {
   id: string;
   leagueName: string;
-  myTeam: { name: string; abbrev: string; score: number };
-  oppTeam: { name: string; abbrev: string; score: number } | null;
+  myTeam: { name: string; abbrev: string; score: number; projected?: number };
+  oppTeam: { name: string; abbrev: string; score: number; projected?: number } | null;
 };
 
 type EspnFetchResult =
@@ -142,6 +142,14 @@ function sideScore(side: any): number {
   return Number.isFinite(total) ? total : 0;
 }
 
+// Sibling field to totalPointsLive on the same matchup side object — ESPN's
+// own live-updating projected total for that team, requires the
+// mMatchupScore view to be present in the response.
+function sideProjected(side: any): number | undefined {
+  const n = Number(side?.totalProjectedPointsLive);
+  return Number.isFinite(n) ? n : undefined;
+}
+
 export function extractEspnTeams(data: any): EspnTeam[] {
   const teams = Array.isArray(data?.teams) ? data.teams : [];
   return teams.map((t: any) => ({
@@ -227,7 +235,7 @@ export async function analyzeEspnMatchup(opts: {
   const result = await fetchWithYearFallback({
     leagueId: opts.leagueId,
     cookies,
-    views: ["mMatchup", "mRoster", "mTeam", "mScoreboard"],
+    views: ["mMatchup", "mMatchupScore", "mRoster", "mTeam", "mScoreboard"],
     week: opts.week,
     year: opts.year,
   });
@@ -250,14 +258,20 @@ export async function analyzeEspnMatchup(opts: {
   );
   let myScore = 0;
   let oppScore: number | null = null;
+  let myProjected: number | undefined;
+  let oppProjected: number | undefined;
   if (matchup) {
     const userIsHome = matchup.home?.teamId === userTeam.id;
     const mySide = userIsHome ? matchup.home : matchup.away;
     const oppSide = userIsHome ? matchup.away : matchup.home;
     myScore = sideScore(mySide);
+    myProjected = sideProjected(mySide);
     const oppId = oppSide?.teamId;
     opponentTeam = teams.find((t) => t.id === oppId) ?? null;
-    if (opponentTeam) oppScore = sideScore(oppSide);
+    if (opponentTeam) {
+      oppScore = sideScore(oppSide);
+      oppProjected = sideProjected(oppSide);
+    }
   }
 
   const userName = teamName(userTeam);
@@ -286,8 +300,8 @@ export async function analyzeEspnMatchup(opts: {
     matchup: {
       id: `espn:${opts.leagueId}:${opts.week}`,
       leagueName,
-      myTeam: { name: userName, abbrev: userAbbrev, score: myScore },
-      oppTeam: opponentTeam ? { name: oppName, abbrev: oppAbbrev, score: oppScore ?? 0 } : null,
+      myTeam: { name: userName, abbrev: userAbbrev, score: myScore, projected: myProjected },
+      oppTeam: opponentTeam ? { name: oppName, abbrev: oppAbbrev, score: oppScore ?? 0, projected: oppProjected } : null,
     },
   };
 }
