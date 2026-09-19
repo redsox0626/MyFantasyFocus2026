@@ -22,11 +22,13 @@ export function PlayerCard({
   overlap,
   matchups,
   redZone,
+  large,
 }: {
   player: Player;
   overlap?: boolean;
   matchups: MatchupScore[];
   redZone?: boolean;
+  large?: boolean;
 }) {
   const tone = overlap ? overlapTone(player) : undefined;
   const tags = player.tags?.length
@@ -44,7 +46,8 @@ export function PlayerCard({
   return (
     <article
       className={cn(
-        "rounded-lg bg-surface px-3 py-3 shadow-border",
+        "bg-surface shadow-border",
+        large ? "rounded-xl px-5 py-4" : "rounded-lg px-3 py-3",
         tone === "mine" && "bg-mine-wash",
         tone === "theirs" && "bg-theirs-wash",
         tone === "shared" && "bg-shared-wash",
@@ -52,58 +55,79 @@ export function PlayerCard({
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <p className="truncate text-sm font-medium text-fg">{player.playerNameOnly}</p>
+          <div className={cn("flex items-center", large ? "gap-3" : "gap-2")}>
+            <p className={cn("truncate font-medium text-fg", large ? "text-2xl" : "text-sm")}>
+              {player.playerNameOnly}
+            </p>
             {player.count > 1 ? (
-              <Badge variant={tone ?? "muted"} className="shrink-0">
+              <Badge variant={tone ?? "muted"} className={cn("shrink-0", large && "px-2.5 py-1 text-sm")}>
                 ×{player.count}
               </Badge>
             ) : null}
             {redZone ? (
               <span
                 title="In the red zone"
-                className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-theirs px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-theirs-fg"
+                className={cn(
+                  "inline-flex shrink-0 items-center rounded-full bg-theirs font-semibold uppercase tracking-wide text-theirs-fg",
+                  large ? "gap-1.5 px-3 py-1.5 text-sm" : "gap-0.5 px-1.5 py-0.5 text-[10px]",
+                )}
               >
-                <Siren className="size-3 animate-pulse" />
+                <Siren className={large ? "size-5 animate-pulse" : "size-3 animate-pulse"} />
                 RZ
               </span>
             ) : null}
           </div>
-          <p className="mt-0.5 truncate text-xs text-muted tabular-nums">
+          <p className={cn("truncate text-muted tabular-nums", large ? "mt-1 text-base" : "mt-0.5 text-xs")}>
             {player.nflTeam}
             {player.kickoff ? ` · ${player.kickoff}` : ""}
           </p>
         </div>
         {player.position === "QB" ? (
           player.qb4ptPts != null || player.qb6ptPts != null ? (
-            <div className="flex shrink-0 items-start gap-2.5">
+            <div className={cn("flex shrink-0 items-start", large ? "gap-4" : "gap-2.5")}>
               <div className="flex flex-col items-center leading-none">
-                <span className="text-lg font-semibold text-fg tabular-nums">{(player.qb4ptPts ?? 0).toFixed(1)}</span>
-                <span className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">4pt</span>
+                <span className={cn("font-semibold text-fg tabular-nums", large ? "text-4xl" : "text-lg")}>
+                  {(player.qb4ptPts ?? 0).toFixed(1)}
+                </span>
+                <span className={cn("uppercase tracking-wide text-muted", large ? "mt-1 text-sm" : "mt-0.5 text-[10px]")}>
+                  4pt
+                </span>
               </div>
               <div className="flex flex-col items-center leading-none">
-                <span className="text-lg font-semibold text-fg tabular-nums">{(player.qb6ptPts ?? 0).toFixed(1)}</span>
-                <span className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">6pt</span>
+                <span className={cn("font-semibold text-fg tabular-nums", large ? "text-4xl" : "text-lg")}>
+                  {(player.qb6ptPts ?? 0).toFixed(1)}
+                </span>
+                <span className={cn("uppercase tracking-wide text-muted", large ? "mt-1 text-sm" : "mt-0.5 text-[10px]")}>
+                  6pt
+                </span>
               </div>
             </div>
           ) : null
         ) : player.stdPts != null || player.pprPts != null ? (
-          <div className="flex shrink-0 items-start gap-2.5">
+          <div className={cn("flex shrink-0 items-start", large ? "gap-4" : "gap-2.5")}>
             <div className="flex flex-col items-center leading-none">
-              <span className="text-lg font-semibold text-fg tabular-nums">{(player.stdPts ?? 0).toFixed(1)}</span>
-              <span className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">Std.</span>
+              <span className={cn("font-semibold text-fg tabular-nums", large ? "text-4xl" : "text-lg")}>
+                {(player.stdPts ?? 0).toFixed(1)}
+              </span>
+              <span className={cn("uppercase tracking-wide text-muted", large ? "mt-1 text-sm" : "mt-0.5 text-[10px]")}>
+                Std.
+              </span>
             </div>
             {!NO_PPR_POSITIONS.has(player.position) ? (
               <div className="flex flex-col items-center leading-none">
-                <span className="text-lg font-semibold text-fg tabular-nums">{(player.pprPts ?? 0).toFixed(1)}</span>
-                <span className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">PPR</span>
+                <span className={cn("font-semibold text-fg tabular-nums", large ? "text-4xl" : "text-lg")}>
+                  {(player.pprPts ?? 0).toFixed(1)}
+                </span>
+                <span className={cn("uppercase tracking-wide text-muted", large ? "mt-1 text-sm" : "mt-0.5 text-[10px]")}>
+                  PPR
+                </span>
               </div>
             ) : null}
           </div>
         ) : null}
       </div>
       {tags.length > 0 ? (
-        <div className="mt-2 flex flex-wrap gap-1">
+        <div className={cn("flex flex-wrap", large ? "mt-3 gap-2" : "mt-2 gap-1")}>
           {tags.map((tag) => {
             const status = matchups.length && tag.side === "mine" ? tagForm(tag, matchups) : undefined;
             return (
@@ -111,7 +135,8 @@ export function PlayerCard({
                 key={`${tag.matchupId}-${tag.side}-${tag.abbrev}`}
                 title={tag.name}
                 className={cn(
-                  "rounded-md px-1.5 py-0.5 text-[11px] leading-snug",
+                  "rounded-md leading-snug",
+                  large ? "px-3 py-1.5 text-base" : "px-1.5 py-0.5 text-[11px]",
                   overlap && tag.side === "mine" && "bg-mine text-mine-fg",
                   overlap && tag.side === "theirs" && "bg-theirs text-theirs-fg",
                   (!overlap || (tag.side !== "mine" && tag.side !== "theirs")) && "bg-subtle text-muted",

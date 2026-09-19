@@ -102,7 +102,7 @@ export function LineupBoard({
 
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-3 gap-1 rounded-xl bg-elevated p-1 shadow-border lg:hidden">
+      <div className="grid grid-cols-3 gap-1 rounded-xl bg-elevated p-1 shadow-border lg:hidden [@media(min-width:700px)_and_(orientation:landscape)]:hidden">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -119,11 +119,19 @@ export function LineupBoard({
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-        <div className={cn(col !== "my" && "hidden lg:block")}>
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3 [@media(min-width:700px)_and_(orientation:landscape)]:grid-cols-3">
+        <div
+          className={cn(
+            col !== "my" && "hidden lg:block [@media(min-width:700px)_and_(orientation:landscape)]:block",
+          )}
+        >
           <Column title="My guys" hint="You start them" players={my} tone="mine" matchups={matchups} redZoneTeams={redZoneTeams} />
         </div>
-        <div className={cn(col !== "overlap" && "hidden lg:block")}>
+        <div
+          className={cn(
+            col !== "overlap" && "hidden lg:block [@media(min-width:700px)_and_(orientation:landscape)]:block",
+          )}
+        >
           <Column
             title="Both"
             hint="Started on both sides"
@@ -134,7 +142,11 @@ export function LineupBoard({
             redZoneTeams={redZoneTeams}
           />
         </div>
-        <div className={cn(col !== "opponent" && "hidden lg:block")}>
+        <div
+          className={cn(
+            col !== "opponent" && "hidden lg:block [@media(min-width:700px)_and_(orientation:landscape)]:block",
+          )}
+        >
           <Column
             title="Their guys"
             hint="Opponent starts them"

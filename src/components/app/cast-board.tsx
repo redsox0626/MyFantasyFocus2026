@@ -108,6 +108,7 @@ function CastColumn({
                       overlap={overlap}
                       matchups={matchups}
                       redZone={redZoneTeams.has(normalizeNflTeam(player.nflTeam))}
+                      large
                     />
                   ))}
                 </div>
@@ -144,7 +145,7 @@ export function CastBoard({
   }, [onExit]);
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-app p-4">
+    <div className="fixed inset-0 z-50 flex flex-col bg-black p-4">
       <button
         type="button"
         onClick={onExit}
@@ -153,10 +154,7 @@ export function CastBoard({
         <X className="size-4" />
         Exit cast mode
       </button>
-      {/* CSS zoom (not transform) scales real layout size, not just paint —
-          so the auto-scroll math above (which reads scrollHeight/clientHeight
-          on elements inside this zoomed box) stays internally consistent. */}
-      <div className="flex min-h-0 flex-1 gap-4 pt-2" style={{ zoom: 1.3 } as React.CSSProperties}>
+      <div className="flex min-h-0 flex-1 gap-4 pt-2">
         <CastColumn
           title="My guys"
           hint="You start them"

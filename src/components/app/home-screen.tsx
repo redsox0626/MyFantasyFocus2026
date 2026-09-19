@@ -173,11 +173,11 @@ export function HomeScreen() {
     };
   }, [result, filter, bootstrap, liveTeams, showIdp]);
 
-  // Cast mode always shows the full slate — the whole point is one
-  // comprehensive board, not whatever narrow window happens to be selected.
+  // Cast mode is meant for glancing at a TV during games, so it only shows
+  // players whose team is currently live — not the full slate.
   const castPlayers = useMemo(() => {
     if (!result) return null;
-    const opts = { filter: "All" as TimeFilter, teams: new Set<string>(), liveTeams, showIdp };
+    const opts = { filter: "Live" as TimeFilter, teams: new Set<string>(), liveTeams, showIdp };
     return {
       my: applyPlayerFilters(result.my, opts),
       overlap: applyPlayerFilters(result.overlap, opts),
